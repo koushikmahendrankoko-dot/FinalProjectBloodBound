@@ -33,23 +33,44 @@
     ctx    = canvas.getContext('2d');
     ctx.imageSmoothingEnabled = false;
 
-    // --- FIX: Check for logged-in user BEFORE loading default save ---
-    const loggedInUser = localStorage.getItem('bb_current_user');
-    
     progression = new ProgressionManager();
-    
-    // If logged in, force the progression manager to load that user's data
-    if (loggedInUser && typeof progression.loadUser === 'function') {
-        saveData = progression.loadUser(loggedInUser);
-    } else {
-        saveData = progression.load(); // Fallback to local
-    }
-    // -----------------------------------------------------------------
-
+    saveData    = progression.load();
     window.GameSettings.screenShake = saveData.settings.screenShake;
     window.GameSettings.pixelFilter  = saveData.settings.pixelFilter;
-    
 
+    audio        = new AudioManager();
+    ui           = new UIManager();
+    story        = new StoryManager();
+    combat       = new CombatManager();
+    enemyManager = new EnemyManager();
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    camera = new Camera(canvas.width, canvas.height);
+    window.__activeCamera = camera;
+    mapManager = new MapManager();
+
+    bindInput();
+    bindMouseInput();
+    bindMenuButtons();
+    bindSettingsPanel();
+    bindPauseMenu();
+
+    if (window.Assets && window.Assets.loadAll) {
+      window.Assets.loadAll().catch(()=>{});
+    }
+
+    simulateLoading();
+  }
+
+  function resizeCanvas() {
+    const topH    = document.getElementById('hud-top')?.offsetHeight    || 0;
+    const bottomH = document.getElementById('hud-bottom')?.offsetHeight || 0;
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight - topH - bottomH;
+    if (camera) camera.resize(canvas.width, canvas.height);
+  }
 
   /* ── LOADING ── */
   function simulateLoading() {
@@ -459,5 +480,5 @@
     ctx.restore();
   }
 
-  document.addEventListener('DOMContentLoaded', init); }
+  document.addEventListener('DOMContentLoaded', init);
 })();
