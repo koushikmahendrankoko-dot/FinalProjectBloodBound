@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bloodbound — Abilities</title>
+  <link rel="stylesheet" href="global.css" />
+  <link rel="stylesheet" href="pages.css" />
+</head>
+<body class="page-body">
+
+  <canvas id="bg-canvas"></canvas>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-logo" onclick="window.location.href='index.html'" style="cursor:pointer">
+      <span class="logo-drop">⬡</span>
+      <span class="logo-text">BLOODBOUND</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="game.html">Play</a></li>
+      <li><a href="abilities.html" class="active">Abilities</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="controls.html">Controls</a></li>
+      <li><a href="progression.html">Progression</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <button class="nav-play-btn" onclick="window.location.href='game.html'"><span>PLAY NOW</span></button>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="mobile-drawer" id="mobile-drawer">
+    <ul>
+      <li><a href="index.html">Home</a></li><li><a href="game.html">Play</a></li>
+      <li><a href="abilities.html">Abilities</a></li><li><a href="shop.html">Shop</a></li>
+      <li><a href="controls.html">Controls</a></li><li><a href="progression.html">Progression</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </div>
+
+  <header class="page-hero">
+    <div class="spoiler-warn">⚠ WARNING — This page contains ability spoilers.</div>
+    <div class="page-hero-eyebrow">— BLOOD ARSENAL —</div>
+    <h1 class="page-hero-title">Abilities</h1>
+    <p class="page-hero-desc">Every ability in Bloodbound is powered by your own health. The greater the sacrifice, the greater the devastation. Use them wisely.</p>
+  </header>
+
+  <main class="page-main">
+
+    <!-- TIER I -->
+    <section class="ability-tier-section">
+      <div class="tier-header">
+        <span class="tier-badge tier-1">TIER I</span>
+        <h2>Starting Abilities</h2>
+        <p>Available from the beginning. Your foundation of survival.</p>
+      </div>
+      <div class="ability-cards">
+
+        <div class="ability-card">
+          <div class="ability-card-header">
+            <div class="ability-icon-large">⚡</div>
+            <div class="ability-header-info">
+              <h3>Blood Surge</h3>
+              <div class="ability-tags">
+                <span class="tag">Melee</span>
+                <span class="tag">Single Target</span>
+              </div>
+            </div>
+            <div class="ability-cost-badge">
+              <span class="cost-num">10</span>
+              <span class="cost-unit">HP</span>
+            </div>
+          </div>
+          <p class="ability-desc">Channel blood into your fist and deliver a powerful forward strike. Deals 2.5x normal damage in a single burst. Short cooldown of 1.5 seconds. Your bread-and-butter blood ability — reliable, efficient, and quick.</p>
+          <div class="ability-stats-row">
+            <div class="ability-stat"><span>Damage</span><span>2.5× base</span></div>
+            <div class="ability-stat"><span>HP Cost</span><span>10</span></div>
+            <div class="ability-stat"><span>Cooldown</span><span>1.5s</span></div>
+            <div class="ability-stat"><span>Range</span><span>Melee</span></div>
+          </div>
+          <div class="ability-tip">💡 <strong>Tip:</strong> Blood Surge synergizes well with the Vial of the Ancients relic, reducing its cost to just 8 HP per cast.</div>
+          <div class="ability-key-hint">Key: <kbd>1</kbd></div>
+        </div>
+
+        <div class="ability-card">
+          <div class="ability-card-header">
+            <div class="ability-icon-large">🌀</div>
+            <div class="ability-header-info">
+              <h3>Crimson Whirl</h3>
+              <div class="ability-tags">
+                <span class="tag">Spin Attack</span>
+                <span class="tag">Area of Effect</span>
+              </div>
+            </div>
+            <div class="ability-cost-badge">
+              <span class="cost-num">15</span>
+              <span class="cost-unit">HP</span>
+            </div>
+          </div>
+          <p class="ability-desc">Spin in place, releasing blood energy in a full 360° arc. Hits all enemies within a short radius. Excellent for crowd control when surrounded. The spin lasts 0.5 seconds and can hit the same enemy multiple times.</p>
+          <div class="ability-stats-row">
+            <div class="ability-stat"><span>Damage</span><span>1.8× base</span></div>
+            <div class="ability-stat"><span>HP Cost</span><span>15</span></div>
+            <div class="ability-stat"><span>Cooldown</span><span>3s</span></div>
+            <div class="ability-stat"><span>Range</span><span>Short AoE</span></div>
+          </div>
+          <div class="ability-tip">💡 <strong>Tip:</strong> Crimson Whirl briefly staggers lighter enemies, giving you a moment to reposition or heal.</div>
+          <div class="ability-key-hint">Key: <kbd>2</kbd></div>
+        </div>
+
+        <div class="ability-card">
+          <div class="ability-card-header">
+            <div class="ability-icon-large">🩸</div>
+            <div class="ability-header-info">
+              <h3>Lifesteal</h3>
+              <div class="ability-tags">
+                <span class="tag">Sustain</span>
+                <span class="tag">Melee</span>
+              </div>
+            </div>
+            <div class="ability-cost-badge">
+              <span class="cost-num">5</span>
+              <span class="cost-unit">HP</span>
+            </div>
+          </div>
+          <p class="ability-desc">Strike an enemy and absorb their life force. Deals 1.2× base damage and restores HP equal to 50% of the damage dealt. Cheapest blood ability in your arsenal — ideal for sustained fights where you need to recover health mid-battle.</p>
+          <div class="ability-stats-row">
+            <div class="ability-stat"><span>Damage</span><span>1.2× base</span></div>
+            <div class="ability-stat"><span>HP Cost</span><span>5</span></div>
+            <div class="ability-stat"><span>Cooldown</span><span>2s</span></div>
+            <div class="ability-stat"><span>Heal</span><span>50% dmg dealt</span></div>
+          </div>
+          <div class="ability-tip">💡 <strong>Tip:</strong> Against bosses with frequent openings, spamming Lifesteal can actually sustain your HP better than potions in Phase 1.</div>
+          <div class="ability-key-hint">Key: <kbd>3</kbd> (Ch. I)</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TIER II -->
+    <section class="ability-tier-section">
+      <div class="tier-header">
+        <span class="tier-badge tier-2">TIER II</span>
+        <h2>Unlockable Abilities</h2>
+        <p>Purchasable in the shop. Unlocked after Chapter I or later.</p>
+      </div>
+      <div class="ability-cards">
+
+        <div class="ability-card">
+          <div class="ability-card-header">
+            <div class="ability-icon-large">🔥</div>
+            <div class="ability-header-info">
+              <h3>Hemorrhage</h3>
+              <div class="ability-tags"><span class="tag">Area</span><span class="tag">Damage Over Time</span></div>
+            </div>
+            <div class="ability-cost-badge"><span class="cost-num">20</span><span class="cost-unit">HP</span></div>
+          </div>
+          <p class="ability-desc">Ignite your blood and erupt in a burning aura for 3 seconds. Nearby enemies take continuous fire damage. Great for holding choke points or dealing sustained damage to slow-moving bosses.</p>
+          <div class="ability-stats-row">
+            <div class="ability-stat"><span>Damage</span><span>8 dmg/tick</span></div>
+            <div class="ability-stat"><span>HP Cost</span><span>20</span></div>
+            <div class="ability-stat"><span>Cooldown</span><span>5s</span></div>
+            <div class="ability-stat"><span>Duration</span><span>3s</span></div>
+          </div>
+          <div class="ability-tip">💡 <strong>Tip:</strong> Hemorrhage is especially effective in Chapter II's tight dungeon corridors.</div>
+          <div class="ability-key-hint">Unlock: Shop (200 🩸)</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TIER III -->
+    <section class="ability-tier-section">
+      <div class="tier-header">
+        <span class="tier-badge tier-3">TIER III</span>
+        <h2>Advanced Abilities</h2>
+        <p>Unlocked via shop after Chapter III. High cost, devastating power.</p>
+      </div>
+      <div class="ability-cards">
+
+        <div class="ability-card">
+          <div class="ability-card-header">
+            <div class="ability-icon-large">💀</div>
+            <div class="ability-header-info">
+              <h3>Death Mark</h3>
+              <div class="ability-tags"><span class="tag">Debuff</span><span class="tag">Single Target</span></div>
+            </div>
+            <div class="ability-cost-badge"><span class="cost-num">25</span><span class="cost-unit">HP</span></div>
+          </div>
+          <p class="ability-desc">Brand a target with a blood rune. They take double damage from all sources for 8 seconds. The mark is visible as a glowing red symbol above the enemy. Perfect for boss fights — apply before using your heaviest abilities.</p>
+          <div class="ability-stats-row">
+            <div class="ability-stat"><span>Damage Amp</span><span>2×</span></div>
+            <div class="ability-stat"><span>HP Cost</span><span>25</span></div>
+            <div class="ability-stat"><span>Cooldown</span><span>8s</span></div>
+            <div class="ability-stat"><span>Duration</span><span>8s</span></div>
+          </div>
+          <div class="ability-tip">💡 <strong>Tip:</strong> Combo: Death Mark → Blood Tide = nearly guaranteed kill on non-boss enemies.</div>
+          <div class="ability-key-hint">Unlock: Shop (350 🩸) — Ch. III required</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TIER IV -->
+    <section class="ability-tier-section">
+      <div class="tier-header">
+        <span class="tier-badge tier-4">TIER IV</span>
+        <h2>Forbidden Abilities</h2>
+        <p>Unlocked in Chapter IV. These abilities are dangerous — to your enemies and yourself.</p>
+      </div>
+      <div class="ability-cards">
+
+        <div class="ability-card legendary">
+          <div class="ability-card-header">
+            <div class="ability-icon-large">🌊</div>
+            <div class="ability-header-info">
+              <h3>Blood Tide</h3>
+              <div class="ability-tags"><span class="tag">Projectile</span><span class="tag">Screen-wide</span></div>
+            </div>
+            <div class="ability-cost-badge danger"><span class="cost-num">30</span><span class="cost-unit">HP</span></div>
+          </div>
+          <p class="ability-desc">Send a massive wave of crimson energy across the entire screen. Pierces all enemies in its path. The most powerful single-target and AoE ability in the game. The screen flashes red when cast, and you briefly lose control during the animation.</p>
+          <div class="ability-stats-row">
+            <div class="ability-stat"><span>Damage</span><span>5× base</span></div>
+            <div class="ability-stat"><span>HP Cost</span><span>30</span></div>
+            <div class="ability-stat"><span>Cooldown</span><span>10s</span></div>
+            <div class="ability-stat"><span>Pierces</span><span>All enemies</span></div>
+          </div>
+          <div class="ability-tip">💡 <strong>Tip:</strong> Do not use Blood Tide if below 35 HP. The recoil animation leaves you vulnerable for 1.5 seconds.</div>
+          <div class="ability-key-hint">Unlock: Shop (500 🩸) — Ch. IV required</div>
+        </div>
+
+        <div class="ability-card legendary">
+          <div class="ability-card-header">
+            <div class="ability-icon-large">☠</div>
+            <div class="ability-header-info">
+              <h3>Sanguine Sacrifice</h3>
+              <div class="ability-tags"><span class="tag">Ultimate</span><span class="tag">Self-Damage</span></div>
+            </div>
+            <div class="ability-cost-badge danger"><span class="cost-num">50</span><span class="cost-unit">HP</span></div>
+          </div>
+          <p class="ability-desc">The final ability. Sacrifice 50 HP to deal damage equal to 3× the HP you sacrificed to all enemies on screen. A calculated risk — but with the Crimson Crown relic equipped below 25% HP, this becomes the most devastating move in the game.</p>
+          <div class="ability-stats-row">
+            <div class="ability-stat"><span>Damage</span><span>150 flat</span></div>
+            <div class="ability-stat"><span>HP Cost</span><span>50</span></div>
+            <div class="ability-stat"><span>Cooldown</span><span>15s</span></div>
+            <div class="ability-stat"><span>AoE</span><span>Full screen</span></div>
+          </div>
+          <div class="ability-tip">💡 <strong>Tip:</strong> In the final boss fight, this is essential. Save it for Phase 3.</div>
+          <div class="ability-key-hint">Unlock: Automatic — Chapter V</div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <div class="page-return">
+    <button class="btn-primary" onclick="window.location.href='game.html'">▶ Return to Game</button>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-logo"><span class="logo-drop">⬡</span> BLOODBOUND</div>
+    <div class="footer-links">
+      <a href="index.html">Home</a><a href="game.html">Play</a>
+      <a href="abilities.html">Abilities</a><a href="shop.html">Shop</a>
+      <a href="controls.html">Controls</a><a href="progression.html">Progression</a>
+      <a href="about.html">About</a>
+    </div>
+    <div class="footer-credits"><p>Created by Bentley J.B. & Koushik M. — ICD20 — Mr. McRae — May 2026</p></div>
+  </footer>
+
+  <script src="../js/pages.js"></script>
+</body>
+</html>

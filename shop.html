@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bloodbound — Shop</title>
+  <link rel="stylesheet" href="global.css" />
+  <link rel="stylesheet" href="pages.css" />
+  <link rel="stylesheet" href="shop.css" />
+</head>
+<body class="page-body">
+
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-logo" onclick="window.location.href='index.html'" style="cursor:pointer">
+      <span class="logo-drop">⬡</span>
+      <span class="logo-text">BLOODBOUND</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="game.html">Play</a></li>
+      <li><a href="abilities.html">Abilities</a></li>
+      <li><a href="shop.html" class="active">Shop</a></li>
+      <li><a href="controls.html">Controls</a></li>
+      <li><a href="progression.html">Progression</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <button class="nav-play-btn" onclick="window.location.href='game.html'">
+      <span>PLAY NOW</span>
+    </button>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="mobile-drawer" id="mobile-drawer">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="game.html">Play</a></li>
+      <li><a href="abilities.html">Abilities</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="controls.html">Controls</a></li>
+      <li><a href="progression.html">Progression</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </div>
+
+  <!-- PAGE HERO -->
+  <header class="page-hero">
+    <div class="page-hero-eyebrow">— THE BLOOD MARKET —</div>
+    <h1 class="page-hero-title">Shop</h1>
+    <p class="page-hero-desc">Spend your blood currency on powerful upgrades, new abilities, and rare relics. Progress in-game to unlock more items.</p>
+    <div class="shop-currency-display">
+      <span class="currency-icon">🩸</span>
+      <span class="currency-label">Your Blood Coins:</span>
+      <span class="currency-amount" id="shop-currency">Loading...</span>
+    </div>
+  </header>
+
+  <!-- SHOP TABS -->
+  <main class="shop-main">
+    <div class="shop-tabs">
+      <button class="shop-tab active" data-tab="upgrades">⚔️ Upgrades</button>
+      <button class="shop-tab" data-tab="abilities">🩸 Abilities</button>
+      <button class="shop-tab" data-tab="relics">💎 Relics</button>
+      <button class="shop-tab" data-tab="consumables">🧪 Consumables</button>
+    </div>
+
+    <!-- UPGRADES TAB -->
+    <section class="shop-section active" id="tab-upgrades">
+      <div class="shop-grid">
+
+        <div class="shop-card" data-id="hp-up-1">
+          <div class="shop-card-icon">❤️</div>
+          <div class="shop-card-info">
+            <h3>Max HP +20</h3>
+            <p>Increase your maximum health by 20. The rune can hold more life force.</p>
+            <div class="shop-card-meta">
+              <span class="shop-tier tier-1">Tier I</span>
+              <span class="shop-type">Passive</span>
+            </div>
+          </div>
+          <div class="shop-card-cost">
+            <span class="cost-icon">🩸</span>
+            <span class="cost-val">50</span>
+          </div>
+          <button class="shop-buy-btn" data-cost="50" data-id="hp-up-1">Buy</button>
+        </div>
+
+        <div class="shop-card" data-id="atk-up-1">
+          <div class="shop-card-icon">⚔️</div>
+          <div class="shop-card-info">
+            <h3>Attack +5</h3>
+            <p>Your basic strike deals more damage. A sharper weapon wastes less blood.</p>
+            <div class="shop-card-meta">
+              <span class="shop-tier tier-1">Tier I</span>
+              <span class="shop-type">Passive</span>
+            </div>
+          </div>
+          <div class="shop-card-cost">
+            <span class="cost-icon">🩸</span>
+            <span class="cost-val">60</span>
+          </div>
+          <button class="shop-buy-btn" data-cost="60" data-id="atk-up-1">Buy</button>
+        </div>
+
+        <div class="shop-card" data-id="spd-up-1">
+          <div class="shop-card-icon">💨</div>
+          <div class="shop-card-info">
+            <h3>Speed +1</h3>
+            <p>Move faster across the world. Useful for dodging boss attacks and exploring.</p>
+            <div class="shop-card-meta">
+              <span class="shop-tier tier-1">Tier I</span>
+              <span class="shop-type">Passive</span>
+            </div>
+          </div>
+          <div class="shop-card-cost">
+            <span class="cost-icon">🩸</span>
+            <span class="cost-val">40</span>
+          </div>
+          <button class="shop-buy-btn" data-cost="40" data-id="spd-up-1">Buy</button>
+        </div>
+
+        <div class="shop-card locked" data-id="hp-up-2">
+          <div class="shop-card-icon">❤️</div>
+          <div class="shop-card-info">
+            <h3>Max HP +40</h3>
+            <p>A major health boost. Requires Chapter II completion.</p>
+            <div class="shop-card-meta">
+              <span class="shop-tier tier-2">Tier II</span>
+              <span class="shop-type">Passive</span>
+            </div>
+          </div>
+          <div class="shop-card-cost">
+            <span class="cost-icon">🩸</span>
+            <span class="cost-val">150</span>
+          </div>
+          <button class="shop-buy-btn locked-btn" disabled>🔒 Ch. II</button>
+        </div>
+
+        <div class="shop-card locked" data-id="regen-1">
+          <div class="shop-card-icon">🔄</div>
+          <div class="shop-card-info">
+            <h3>Blood Regen I</h3>
+            <p>Slowly regenerate HP over time when out of combat. Requires Chapter III.</p>
+            <div class="shop-card-meta">
+              <span class="shop-tier tier-3">Tier III</span>
+              <span class="shop-type">Passive</span>
+            </div>
+          </div>
+          <div class="shop-card-cost">
+            <span class="cost-icon">🩸</span>
+            <span class="cost-val">300</span>
+          </div>
+          <button class="shop-buy-btn locked-btn" disabled>🔒 Ch. III</button>
+        </div>
+
+        <div class="shop-card locked" data-id="atk-up-2">
+          <div class="shop-card-icon">🗡️</div>
+          <div class="shop-card-info">
+            <h3>Attack +15</h3>
+            <p>A powerful attack upgrade. Requires Chapter III completion.</p>
+            <div class="shop-card-meta">
+              <span class="shop-tier tier-3">Tier III</span>
+              <span class="shop-type">Passive</span>
+            </div>
+          </div>
+          <div class="shop-card-cost">
+            <span class="cost-icon">🩸</span>
+            <span class="cost-val">400</span>
+          </div>
+          <button class="shop-buy-btn locked-btn" disabled>🔒 Ch. III</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ABILITIES TAB -->
+    <section class="shop-section" id="tab-abilities">
+      <div class="shop-grid">
+
+        <div class="shop-card" data-id="ability-hemorrhage">
+          <div class="shop-card-icon">🔥</div>
+          <div class="shop-card-info">
+            <h3>Hemorrhage</h3>
+            <p>Unleash a burning blood aura, dealing damage in all directions. Costs 20 HP to cast.</p>
+            <div class="shop-card-meta">
+              <span class="shop-tier tier-2">Tier II Ability</span>
+              <span class="shop-type">Area</span>
+            </div>
+          </div>
+          <div class="shop-card-cost">
+            <span class="cost-icon">🩸</span>
+            <span class="cost-val">200</span>
+          </div>
+          <button class="shop-buy-btn" data-cost="200" data-id="ability-hemorrhage">Unlock</button>
+        </div>
+
+        <div class="shop-card locked" data-id="ability-deathjmark">
+          <div class="shop-card-icon">💀</div>
+          <div class="shop-card-info">
+            <h3>Death Mark</h3>
+            <p>Brand an enemy — they take double damage for 8 seconds. Costs 25 HP. Requires Chapter III.</p>
+            <div class="shop-card-meta">
+              <span class="shop-tier tier-3">Tier III Ability</span>
+              <span class="shop-type">Debuff</span>
+            </div>
+          </div>
+          <div class="shop-card-cost">
+            <span class="cost-icon">🩸</span>
+            <span class="cost-val">350</span>
+          </div>
+          <button class="shop-buy-btn locked-btn" disabled>🔒 Ch. III</button>
+        </div>
+
+        <div class="shop-card locked" data-id="ability-bloodtide">
+          <div class="shop-card-icon">🌊</div>
+          <div class="shop-card-info">
+            <h3>Blood Tide</h3>
+            <p>Send a wave of crimson energy across the screen. Costs 30 HP. Requires Chapter IV.</p>
+            <div class="shop-card-meta">
+              <span class="shop-tier tier-4">Tier IV Ability</span>
+              <span class="shop-type">Projectile</span>
+            </div>
+          </div>
+          <div class="shop-card-cost">
+            <span class="cost-icon">🩸</span>
+            <span class="cost-val">500</span>
+          </div>
+          <button class="shop-buy-btn locked-btn" disabled>🔒 Ch. IV</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- RELICS TAB -->
+    <section class="shop-section" id="tab-relics">
+      <div class="shop-grid">
+
+        <div class="shop-card" data-id="relic-vial">
+          <div class="shop-card-icon">🧿</div>
+          <div class="shop-card-info">
+            <h3>Vial of the Ancients</h3>
+            <p>A passive relic. Blood abilities cost 2 less HP per cast. Equip in inventory.</p>
+            <div class="shop-card-meta">
+              <span class="shop-tier tier-2">Relic</span>
+              <span class="shop-type">Equippable</span>
+            </div>
+          </div>
+          <div class="shop-card-cost">
+            <span class="cost-icon">🩸</span>
+            <span class="cost-val">250</span>
+          </div>
+          <button class="shop-buy-btn" data-cost="250" data-id="relic-vial">Buy</button>
+        </div>
+
+        <div class="shop-card locked" data-id="relic-crown">
+          <div class="shop-card-icon">👑</div>
+          <div class="shop-card-info">
+            <h3>Crimson Crown</h3>
+            <p>When HP drops below 25%, abilities deal 50% more damage. Requires Chapter IV.</p>
+            <div class="shop-card-meta">
+              <span class="shop-tier tier-4">Relic</span>
+              <span class="shop-type">Equippable</span>
+            </div>
+          </div>
+          <div class="shop-card-cost">
+            <span class="cost-icon">🩸</span>
+            <span class="cost-val">600</span>
+          </div>
+          <button class="shop-buy-btn locked-btn" disabled>🔒 Ch. IV</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CONSUMABLES TAB -->
+    <section class="shop-section" id="tab-consumables">
+      <div class="shop-grid">
+
+        <div class="shop-card" data-id="potion-small">
+          <div class="shop-card-icon">🧪</div>
+          <div class="shop-card-info">
+            <h3>Small Blood Potion</h3>
+            <p>Restore 30 HP instantly. Consumed on use. Carry up to 5 at a time.</p>
+            <div class="shop-card-meta">
+              <span class="shop-tier tier-1">Consumable</span>
+              <span class="shop-type">Instant</span>
+            </div>
+          </div>
+          <div class="shop-card-cost">
+            <span class="cost-icon">🩸</span>
+            <span class="cost-val">20</span>
+          </div>
+          <button class="shop-buy-btn" data-cost="20" data-id="potion-small">Buy</button>
+        </div>
+
+        <div class="shop-card" data-id="potion-large">
+          <div class="shop-card-icon">⚗️</div>
+          <div class="shop-card-info">
+            <h3>Large Blood Potion</h3>
+            <p>Restore 80 HP instantly. Rare and expensive. Carry up to 3 at a time.</p>
+            <div class="shop-card-meta">
+              <span class="shop-tier tier-2">Consumable</span>
+              <span class="shop-type">Instant</span>
+            </div>
+          </div>
+          <div class="shop-card-cost">
+            <span class="cost-icon">🩸</span>
+            <span class="cost-val">75</span>
+          </div>
+          <button class="shop-buy-btn" data-cost="75" data-id="potion-large">Buy</button>
+        </div>
+
+        <div class="shop-card" data-id="revive-charm">
+          <div class="shop-card-icon">✨</div>
+          <div class="shop-card-info">
+            <h3>Revival Charm</h3>
+            <p>Automatically revive once with 50% HP when you die. Single-use per life.</p>
+            <div class="shop-card-meta">
+              <span class="shop-tier tier-2">Consumable</span>
+              <span class="shop-type">Auto-Use</span>
+            </div>
+          </div>
+          <div class="shop-card-cost">
+            <span class="cost-icon">🩸</span>
+            <span class="cost-val">100</span>
+          </div>
+          <button class="shop-buy-btn" data-cost="100" data-id="revive-charm">Buy</button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- RETURN TO GAME -->
+  <div class="page-return">
+    <button class="btn-primary" onclick="window.location.href='game.html'">
+      ▶ Return to Game
+    </button>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-logo"><span class="logo-drop">⬡</span> BLOODBOUND</div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="game.html">Play</a>
+      <a href="abilities.html">Abilities</a>
+      <a href="shop.html">Shop</a>
+      <a href="controls.html">Controls</a>
+      <a href="progression.html">Progression</a>
+      <a href="about.html">About</a>
+    </div>
+    <div class="footer-credits">
+      <p>Created by Bentley J.B. & Koushik M. — ICD20 — Mr. McRae — May 2026</p>
+    </div>
+  </footer>
+
+  <script src="shop.js"></script>
+  <script src="pages.js"></script>
+</body>
+</html>

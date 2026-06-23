@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bloodbound — Progression Guide</title>
+  <link rel="stylesheet" href="global.css" />
+  <link rel="stylesheet" href="pages.css" />
+</head>
+<body class="page-body">
+
+  <canvas id="bg-canvas"></canvas>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-logo" onclick="window.location.href='index.html'" style="cursor:pointer">
+      <span class="logo-drop">⬡</span><span class="logo-text">BLOODBOUND</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="game.html">Play</a></li>
+      <li><a href="abilities.html">Abilities</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="controls.html">Controls</a></li>
+      <li><a href="progression.html" class="active">Progression</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <button class="nav-play-btn" onclick="window.location.href='game.html'"><span>PLAY NOW</span></button>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="mobile-drawer" id="mobile-drawer">
+    <ul>
+      <li><a href="index.html">Home</a></li><li><a href="game.html">Play</a></li>
+      <li><a href="abilities.html">Abilities</a></li><li><a href="shop.html">Shop</a></li>
+      <li><a href="controls.html">Controls</a></li><li><a href="progression.html">Progression</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </div>
+
+  <header class="page-hero">
+    <div class="spoiler-warn">⚠ MAJOR SPOILERS — Full game progression, secrets, and ending revealed below.</div>
+    <div class="page-hero-eyebrow">— WALKTHROUGH —</div>
+    <h1 class="page-hero-title">Progression Guide</h1>
+    <p class="page-hero-desc">A complete guide to every chapter, boss, secret, and upgrade path in Bloodbound. Recommended only after your first playthrough.</p>
+  </header>
+
+  <main class="page-main">
+
+    <!-- CHAPTER TIMELINE -->
+    <section class="progression-timeline">
+      <h2 class="controls-section-title">📖 Chapter Timeline</h2>
+
+      <div class="timeline">
+
+        <div class="timeline-item">
+          <div class="timeline-marker">I</div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <h3>The Cursed Village</h3>
+              <span class="timeline-duration">~20 min</span>
+              <span class="timeline-difficulty easy">Intro</span>
+            </div>
+            <p>You wake in a burning village. The elder brands your hand with a blood rune before dying. Explore the village ruins, defeat the village guardian boss, and escape into the forest. This chapter teaches movement, basic combat, and your first two abilities.</p>
+            <div class="timeline-rewards">
+              <strong>Rewards:</strong>
+              <span class="reward-tag">Blood Surge (Ability 1)</span>
+              <span class="reward-tag">Crimson Whirl (Ability 2)</span>
+              <span class="reward-tag">50 🩸</span>
+              <span class="reward-tag">Shop Access</span>
+            </div>
+            <div class="timeline-boss">
+              <strong>Boss:</strong> The Village Guardian — A corrupted elder wielding a flaming staff. Phase 1: slow sweeping attacks. Phase 2 (50% HP): spawns fire pillars. Recommended: use Crimson Whirl to avoid the pillars.
+            </div>
+            <div class="timeline-secrets">
+              <strong>🔍 Secret:</strong> A hidden chest behind the burning blacksmith contains an extra 30 🩸 and a health potion. Walk into the fire — you won't take damage here.
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-marker">II</div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <h3>The Hollow Dungeon</h3>
+              <span class="timeline-duration">~25 min</span>
+              <span class="timeline-difficulty medium">Normal</span>
+            </div>
+            <p>Descend beneath the forest into an ancient dungeon. Solve pressure-plate puzzles to unlock doors. Navigate darkness zones where your vision is limited. Defeat the dungeon's imprisoned beast — something that was sealed away for a reason.</p>
+            <div class="timeline-rewards">
+              <strong>Rewards:</strong>
+              <span class="reward-tag">Lifesteal (Ability 3)</span>
+              <span class="reward-tag">100 🩸</span>
+              <span class="reward-tag">Key of Crimson</span>
+            </div>
+            <div class="timeline-boss">
+              <strong>Boss:</strong> The Hollow Beast — A massive creature that burrows underground. Phase 1: emerges to strike. Phase 2 (60% HP): moves faster, begins charging. Phase 3 (25% HP): berserk mode, screen shakes on every hit. Use Lifesteal during openings to stay healthy.
+            </div>
+            <div class="timeline-secrets">
+              <strong>🔍 Secret:</strong> Room B3 has a cracked wall. Hit it with Blood Surge to reveal the Dungeon Cache — 50 extra 🩸 and Tier II armor.
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-marker">III</div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <h3>The Crimson Castle</h3>
+              <span class="timeline-duration">~30 min</span>
+              <span class="timeline-difficulty hard">Hard</span>
+            </div>
+            <p>Infiltrate the castle of Lord Vael — the ruler who ordered your village's destruction. Avoid patrols, bribe a guard NPC with blood coins, and fight through the throne room. The truth behind the blood curse begins to surface here.</p>
+            <div class="timeline-rewards">
+              <strong>Rewards:</strong>
+              <span class="reward-tag">150 🩸</span>
+              <span class="reward-tag">Shop Tier II unlock</span>
+              <span class="reward-tag">The Blood Scroll (lore)</span>
+            </div>
+            <div class="timeline-boss">
+              <strong>Boss:</strong> Lord Vael — Three phases. Phase 1: sword attacks. Phase 2: summons knight minions. Phase 3: reveals his own blood rune — he's cursed too. He becomes sympathetic. Defeating him unlocks the dialogue choice: spare him or finish him. (This affects the ending.)
+            </div>
+            <div class="timeline-secrets">
+              <strong>🔍 Secret:</strong> If you spare Lord Vael, he gives you the Vial of the Ancients relic for free, saving 250 🩸 at the shop.
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-marker">IV</div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <h3>The Blood Temple</h3>
+              <span class="timeline-duration">~25 min</span>
+              <span class="timeline-difficulty hard">Hard</span>
+            </div>
+            <p>The blood rune leads you to an ancient temple — the origin of the curse. Rooms shift and rearrange. Blood pools drain HP if touched. The temple is alive and testing you. Four elemental blood guardians must be defeated before the final door opens.</p>
+            <div class="timeline-rewards">
+              <strong>Rewards:</strong>
+              <span class="reward-tag">Sanguine Sacrifice (Ability 4)</span>
+              <span class="reward-tag">200 🩸</span>
+              <span class="reward-tag">Crimson Crown (if shop purchased)</span>
+            </div>
+            <div class="timeline-boss">
+              <strong>Boss:</strong> The Four Guardians — Fought in sequence with no HP reset between them. Guardian of Flame, Stone, Shadow, and Blood. Each requires a different ability to exploit their weakness. The Blood Guardian can only be harmed by blood abilities.
+            </div>
+            <div class="timeline-secrets">
+              <strong>🔍 Secret:</strong> Activating all 4 blood obelisks in the correct order (shadow, flame, stone, blood) unlocks the hidden Vault with a full HP reset and 100 bonus 🩸.
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item final">
+          <div class="timeline-marker">V</div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <h3>The Final Realm</h3>
+              <span class="timeline-duration">~30 min</span>
+              <span class="timeline-difficulty boss">FINAL</span>
+            </div>
+            <p>Beyond the temple is the Blood God's domain. Reality fractures. Your rune is consuming you. The Blood God is the source of everything — the village, Lord Vael, the dungeon beast, all of it was his doing. Defeat him in a five-phase final battle to break the curse.</p>
+            <div class="timeline-rewards">
+              <strong>Rewards:</strong>
+              <span class="reward-tag">True Ending</span>
+              <span class="reward-tag">Credits Roll</span>
+              <span class="reward-tag">New Game+ Unlocked</span>
+            </div>
+            <div class="timeline-boss">
+              <strong>Final Boss:</strong> The Blood God — 5 phases. Each phase changes the arena. Phase 5: he absorbs your own HP to heal. You must use Sanguine Sacrifice during Phase 5 to deal the final blow. The ending changes based on whether you spared Lord Vael in Chapter III.
+            </div>
+            <div class="timeline-secrets">
+              <strong>🔍 True Ending:</strong> If you spared Lord Vael AND activated all 4 obelisks in Chapter IV, the Blood God reveals he is the original villager who created the curse to protect his people. You can choose to break the curse entirely or absorb it — two distinct endings.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- UPGRADE PATHS -->
+    <section class="controls-section">
+      <h2 class="controls-section-title">⬆️ Recommended Upgrade Path</h2>
+      <div class="upgrade-path">
+        <div class="upgrade-step">
+          <div class="upgrade-num">1</div>
+          <div class="upgrade-info">
+            <h4>Speed +1 (40 🩸)</h4>
+            <p>First purchase. Mobility is survival, especially in Chapter II.</p>
+          </div>
+        </div>
+        <div class="upgrade-arrow">→</div>
+        <div class="upgrade-step">
+          <div class="upgrade-num">2</div>
+          <div class="upgrade-info">
+            <h4>Max HP +20 (50 🩸)</h4>
+            <p>More HP means more room for blood abilities.</p>
+          </div>
+        </div>
+        <div class="upgrade-arrow">→</div>
+        <div class="upgrade-step">
+          <div class="upgrade-num">3</div>
+          <div class="upgrade-info">
+            <h4>Hemorrhage (200 🩸)</h4>
+            <p>Transforms Chapter II dungeon fights. Area damage is essential.</p>
+          </div>
+        </div>
+        <div class="upgrade-arrow">→</div>
+        <div class="upgrade-step">
+          <div class="upgrade-num">4</div>
+          <div class="upgrade-info">
+            <h4>Vial of the Ancients (250 🩸)</h4>
+            <p>Or free if you spare Lord Vael. Reduces ability costs forever.</p>
+          </div>
+        </div>
+        <div class="upgrade-arrow">→</div>
+        <div class="upgrade-step">
+          <div class="upgrade-num">5</div>
+          <div class="upgrade-info">
+            <h4>Death Mark + Blood Tide (850 🩸)</h4>
+            <p>Your endgame combo. Save for these before Chapter V.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="page-return">
+    <button class="btn-primary" onclick="window.location.href='game.html'">▶ Return to Game</button>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-logo"><span class="logo-drop">⬡</span> BLOODBOUND</div>
+    <div class="footer-links">
+      <a href="index.html">Home</a><a href="game.html">Play</a>
+      <a href="abilities.html">Abilities</a><a href="shop.html">Shop</a>
+      <a href="controls.html">Controls</a><a href="progression.html">Progression</a>
+      <a href="about.html">About</a>
+    </div>
+    <div class="footer-credits"><p>Created by Bentley J.B. & Koushik M. — ICD20 — Mr. McRae — May 2026</p></div>
+  </footer>
+
+  <script src="pages.js"></script>
+</body>
+</html>

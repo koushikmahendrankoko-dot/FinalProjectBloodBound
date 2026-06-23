@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bloodbound — Sacrifice to Survive</title>
+  <link rel="stylesheet" href="global.css" />
+  <link rel="stylesheet" href="home.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════ ANIMATED BG CANVAS -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- ═══════════════════════════════════════════ NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-logo">
+      <span class="logo-drop">⬡</span>
+      <span class="logo-text">BLOODBOUND</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="game.html">Play</a></li>
+      <li><a href="abilities.html">Abilities</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="controls.html">Controls</a></li>
+      <li><a href="progression.html">Progression</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="feedback.html">Feedback</a></li>
+      <li><a href="auth.html">Auth</a></li>
+    </ul>
+    <button class="nav-play-btn" onclick="window.location.href='game.html'">
+      <span>PLAY NOW</span>
+      <div class="btn-drip"></div>
+    </button>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════ MOBILE NAV DRAWER -->
+  <div class="mobile-drawer" id="mobile-drawer">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="game.html">Play</a></li>
+      <li><a href="abilities.html">Abilities</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="controls.html">Controls</a></li>
+      <li><a href="progression.html">Progression</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="feedback.html">Feedback</a></li>
+      <li><a href="auth.html">Auth</a></li>
+    </ul>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="pulse-dot"></span>
+        A BROWSER-BASED ACTION RPG
+      </div>
+      <h1 class="hero-title">
+        <span class="title-line line-1">BLOOD</span>
+        <span class="title-line line-2">BOUND</span>
+      </h1>
+      <p class="hero-subtitle">
+        Your blood is your weapon.<br/>
+        Every attack costs you.<br/>
+        <em>How far will you sacrifice to survive?</em>
+      </p>
+      <div class="hero-cta">
+        <button class="btn-primary" onclick="window.location.href='game.html'">
+          <span class="btn-icon">▶</span> BEGIN YOUR CURSE
+        </button>
+        <button class="btn-secondary" onclick="document.getElementById('story').scrollIntoView({behavior:'smooth'})">
+          LEARN THE LORE
+        </button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-val">5</span>
+          <span class="stat-label">Chapters</span>
+        </div>
+        <div class="stat-divider">✦</div>
+        <div class="stat">
+          <span class="stat-val">2h+</span>
+          <span class="stat-label">Playtime</span>
+        </div>
+        <div class="stat-divider">✦</div>
+        <div class="stat">
+          <span class="stat-val">12</span>
+          <span class="stat-label">Abilities</span>
+        </div>
+        <div class="stat-divider">✦</div>
+        <div class="stat">
+          <span class="stat-val">5</span>
+          <span class="stat-label">Bosses</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pixel art hero illustration (CSS drawn) -->
+    <div class="hero-character">
+      <div class="char-glow"></div>
+      <canvas id="hero-sprite-canvas" width="200" height="280"></canvas>
+      <div class="char-shadow"></div>
+    </div>
+
+    <div class="scroll-indicator">
+      <div class="scroll-line"></div>
+      <span>SCROLL</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ STORY TEASER -->
+  <section class="story-section" id="story">
+    <div class="section-eyebrow">— THE LORE —</div>
+    <h2 class="section-title">A Curse Written in Blood</h2>
+
+    <div class="story-grid">
+      <div class="story-card" data-chapter="I">
+        <div class="story-card-icon">🌲</div>
+        <h3>The Cursed Village</h3>
+        <p>Your village burns. A dying elder brands your palm with a rune of blood — a curse, or a gift. The line between them will blur before the end.</p>
+        <span class="chapter-tag">Chapter I</span>
+      </div>
+      <div class="story-card" data-chapter="II">
+        <div class="story-card-icon">🏚</div>
+        <h3>The Hollow Dungeon</h3>
+        <p>Beneath the village lies an ancient prison. Something imprisoned here was not meant to be freed — yet the blood rune on your hand hungers for it.</p>
+        <span class="chapter-tag">Chapter II</span>
+      </div>
+      <div class="story-card" data-chapter="III">
+        <div class="story-card-icon">🏰</div>
+        <h3>The Crimson Castle</h3>
+        <p>The kingdom's knights serve a lord bathed in crimson. To reach the truth, you must become a ghost — or a monster. The castle does not forgive trespassers.</p>
+        <span class="chapter-tag">Chapter III</span>
+      </div>
+      <div class="story-card" data-chapter="IV">
+        <div class="story-card-icon">🩸</div>
+        <h3>The Blood Temple</h3>
+        <p>The rune reaches its full power. Every ability unlocked. Every sacrifice demands more. The temple whispers your name — it has been waiting for you.</p>
+        <span class="chapter-tag">Chapter IV</span>
+      </div>
+      <div class="story-card featured" data-chapter="V">
+        <div class="story-card-icon">☠</div>
+        <h3>The Final Realm</h3>
+        <p>The source of the curse: the Blood God himself. You are the weapon. You are the wound. Only one truth remains — and it will cost everything you have left.</p>
+        <span class="chapter-tag">Chapter V — FINAL</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ MECHANICS -->
+  <section class="mechanics-section" id="mechanics">
+    <div class="section-eyebrow">— CORE GAMEPLAY —</div>
+    <h2 class="section-title">Risk Everything. Gain Everything.</h2>
+
+    <div class="mechanics-grid">
+      <div class="mechanic-card">
+        <div class="mech-icon">⚔️</div>
+        <h3>Blood Sacrifice</h3>
+        <p>Most abilities drain your own HP. The more you sacrifice, the more devastating the attack. Manage your health like a second resource — because it is one.</p>
+      </div>
+      <div class="mechanic-card">
+        <div class="mech-icon">🗺️</div>
+        <h3>Zelda-Style Exploration</h3>
+        <p>Explore interconnected overworlds, dungeons, and secret rooms. Hidden items, locked doors, and shortcuts reward thorough players.</p>
+      </div>
+      <div class="mechanic-card">
+        <div class="mech-icon">👾</div>
+        <h3>Pixel Art World</h3>
+        <p>Every sprite, tile, and effect is hand-crafted in pixel art. Animated environments, weather effects, and dynamic lighting bring the world alive.</p>
+      </div>
+      <div class="mechanic-card">
+        <div class="mech-icon">🧠</div>
+        <h3>Boss Phases</h3>
+        <p>Each boss has multiple phases with unique attack patterns. Learn their rhythms. Use your blood wisely. One wrong sacrifice and it's over.</p>
+      </div>
+      <div class="mechanic-card">
+        <div class="mech-icon">🛒</div>
+        <h3>Shop & Upgrades</h3>
+        <p>Spend blood currency on permanent upgrades, new abilities, and rare items. Unlock passive bonuses that change how your blood abilities function.</p>
+      </div>
+      <div class="mechanic-card">
+        <div class="mech-icon">💾</div>
+        <h3>Save & Progress</h3>
+        <p>Auto-save checkpoints throughout each chapter. Your upgrades, inventory, and story choices persist. Your curse follows you everywhere.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ ABILITIES PREVIEW -->
+  <section class="abilities-preview" id="abilities-preview">
+    <div class="section-eyebrow">— ABILITIES —</div>
+    <h2 class="section-title">Your Blood is Your Arsenal</h2>
+    <p class="section-desc">12 unique abilities across 3 tiers. Each one powered by your own life force.</p>
+
+    <div class="abilities-ticker">
+      <div class="ticker-track">
+        <div class="ability-pill">⚡ Blood Surge — 10 HP</div>
+        <div class="ability-pill">🌀 Crimson Whirl — 15 HP</div>
+        <div class="ability-pill">🔥 Hemorrhage — 20 HP</div>
+        <div class="ability-pill">💀 Death Mark — 25 HP</div>
+        <div class="ability-pill">🩸 Lifesteal — 5 HP</div>
+        <div class="ability-pill">🌊 Blood Tide — 30 HP</div>
+        <div class="ability-pill">⚡ Blood Surge — 10 HP</div>
+        <div class="ability-pill">🌀 Crimson Whirl — 15 HP</div>
+        <div class="ability-pill">🔥 Hemorrhage — 20 HP</div>
+        <div class="ability-pill">💀 Death Mark — 25 HP</div>
+        <div class="ability-pill">🩸 Lifesteal — 5 HP</div>
+        <div class="ability-pill">🌊 Blood Tide — 30 HP</div>
+      </div>
+    </div>
+
+    <a href="abilities.html" class="section-link">View All 12 Abilities →</a>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ CTA BANNER -->
+  <section class="cta-banner">
+    <div class="cta-blood-drip" id="drip-container"></div>
+    <h2>Your Sacrifice Awaits.</h2>
+    <p>Enter the world of Bloodbound. A 2-hour journey through darkness, blood, and redemption.</p>
+    <button class="btn-primary large" onclick="window.location.href='game.html'">
+      <span class="btn-icon">▶</span> PLAY BLOODBOUND — FREE
+    </button>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ FOOTER -->
+  <footer class="footer">
+    <div class="footer-logo">
+      <span class="logo-drop">⬡</span> BLOODBOUND
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="game.html">Play</a>
+      <a href="abilities.html">Abilities</a>
+      <a href="shop.html">Shop</a>
+      <a href="controls.html">Controls</a>
+      <a href="progression.html">Progression</a>
+      <a href="about.html">About</a>
+      <a href="feedback.html">Feedback</a>
+      <a href="auth.html">Auth</a>
+    </div>
+    <div class="footer-credits">
+      <p>Created by Bentley J.B. & Koushik M. — ICD20 — Mr. McRae — May 2026</p>
+      <p class="footer-disclaimer">⚠ Abilities page and Progression page contain spoilers.</p>
+    </div>
+  </footer>
+
+  <script src="home.js"></script>
+</body>
+</html>

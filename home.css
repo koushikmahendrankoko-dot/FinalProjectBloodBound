@@ -1,0 +1,454 @@
+/* ═══════════════════════════════════════════════════════════════
+   BLOODBOUND — home.css
+   Landing page: hero, story, mechanics, abilities, CTA
+═══════════════════════════════════════════════════════════════ */
+
+/* ── PAGE BASE ── */
+body {
+  background: var(--blood-darkest);
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: calc(var(--nav-h) + 40px) clamp(24px, 6vw, 100px) 80px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Radial blood glow behind hero */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 10%; left: 5%;
+  width: clamp(400px, 60vw, 900px);
+  height: clamp(400px, 60vw, 900px);
+  background: radial-gradient(ellipse, rgba(140,20,30,.18) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  max-width: clamp(520px, 55vw, 780px);
+}
+
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-heading);
+  font-size: clamp(.65rem, .85vw, .85rem);
+  letter-spacing: .22em;
+  color: var(--blood-muted);
+  margin-bottom: clamp(12px, 2vw, 20px);
+}
+.pulse-dot {
+  width: 8px; height: 8px;
+  background: var(--blood-vivid);
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: dot-pulse 1.8s ease-in-out infinite;
+}
+@keyframes dot-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,51,71,.6); }
+  50%       { box-shadow: 0 0 0 8px rgba(255,51,71,0); }
+}
+
+.hero-title {
+  display: block;
+  line-height: 1;
+  margin-bottom: clamp(16px, 2vw, 28px);
+}
+.title-line {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 900;
+  letter-spacing: .06em;
+  line-height: 1;
+}
+.line-1 {
+  font-size: clamp(4rem, 9vw, 10rem);
+  color: var(--text-primary);
+  text-shadow: 0 0 60px rgba(180,32,48,.3);
+}
+.line-2 {
+  font-size: clamp(4rem, 9vw, 10rem);
+  color: var(--blood-vivid);
+  text-shadow: 0 0 40px rgba(255,51,71,.6), 0 0 80px rgba(255,51,71,.3);
+  animation: title-flicker 8s ease-in-out infinite;
+}
+@keyframes title-flicker {
+  0%, 92%, 94%, 96%, 100% { opacity: 1; }
+  93%, 95% { opacity: .85; }
+}
+
+.hero-subtitle {
+  font-size: clamp(.9rem, 1.2vw, 1.2rem);
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: clamp(24px, 3vw, 40px);
+  max-width: 480px;
+}
+.hero-subtitle em {
+  color: var(--blood-glow);
+  font-style: normal;
+  font-weight: 500;
+}
+
+.hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: clamp(32px, 4vw, 56px);
+}
+
+.hero-stats {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2vw, 32px);
+  flex-wrap: wrap;
+}
+.stat { text-align: center; }
+.stat-val {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.2vw, 2.2rem);
+  font-weight: 900;
+  color: var(--blood-vivid);
+  line-height: 1;
+}
+.stat-label {
+  font-family: var(--font-heading);
+  font-size: clamp(.6rem, .75vw, .75rem);
+  letter-spacing: .14em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+.stat-divider {
+  font-size: .9rem;
+  color: var(--blood-border);
+}
+
+/* Hero character illustration area */
+.hero-character {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(160px, 22vw, 280px);
+  height: clamp(220px, 30vw, 380px);
+  margin-left: clamp(20px, 4vw, 60px);
+}
+.char-glow {
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(ellipse, rgba(180,32,48,.25) 0%, transparent 70%);
+  animation: char-breathe 3s ease-in-out infinite;
+}
+@keyframes char-breathe {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.08); opacity: .7; }
+}
+#hero-sprite-canvas {
+  position: relative;
+  z-index: 1;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  width: 100%;
+  height: 100%;
+}
+.char-shadow {
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 20px;
+  background: radial-gradient(ellipse, rgba(0,0,0,.6) 0%, transparent 70%);
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 2;
+  animation: scroll-fade 2s ease-in-out infinite;
+}
+@keyframes scroll-fade { 0%,100%{opacity:.4} 50%{opacity:1} }
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--blood-muted), transparent);
+}
+.scroll-indicator span {
+  font-family: var(--font-heading);
+  font-size: .6rem;
+  letter-spacing: .2em;
+  color: var(--text-muted);
+}
+
+/* ── STORY SECTION ── */
+.story-section {
+  position: relative;
+  z-index: 1;
+  padding: clamp(60px, 8vw, 120px) clamp(24px, 6vw, 100px);
+}
+
+.story-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: clamp(16px, 2vw, 28px);
+  margin-top: clamp(32px, 4vw, 56px);
+  max-width: 1400px;
+  margin-inline: auto;
+}
+.story-card {
+  position: relative;
+  background: var(--blood-surface);
+  border: 1px solid var(--blood-border);
+  border-radius: var(--radius-lg);
+  padding: clamp(20px, 2.5vw, 32px);
+  transition: transform var(--t-med), border-color var(--t-med), box-shadow var(--t-med);
+  overflow: hidden;
+}
+.story-card::before {
+  content: attr(data-chapter);
+  position: absolute;
+  top: -10px; right: 16px;
+  font-family: var(--font-display);
+  font-size: 4rem;
+  font-weight: 900;
+  color: rgba(139,26,36,.12);
+  pointer-events: none;
+  line-height: 1;
+}
+.story-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--blood-muted);
+  box-shadow: var(--shadow-card), var(--shadow-glow-sm);
+}
+.story-card.featured {
+  border-color: var(--blood-core);
+  background: linear-gradient(135deg, var(--blood-surface) 0%, var(--blood-raised) 100%);
+}
+.story-card.featured:hover {
+  border-color: var(--blood-bright);
+  box-shadow: var(--shadow-card), var(--shadow-glow-red);
+}
+.story-card-icon {
+  font-size: clamp(1.8rem, 2.5vw, 2.4rem);
+  margin-bottom: 12px;
+}
+.story-card h3 {
+  font-family: var(--font-heading);
+  font-size: clamp(.95rem, 1.2vw, 1.15rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+.story-card p {
+  font-size: clamp(.8rem, .9vw, .9rem);
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.chapter-tag {
+  display: inline-block;
+  margin-top: 16px;
+  font-family: var(--font-heading);
+  font-size: .7rem;
+  letter-spacing: .12em;
+  color: var(--blood-muted);
+  border: 1px solid var(--blood-border);
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+}
+.story-card.featured .chapter-tag {
+  color: var(--blood-bright);
+  border-color: var(--blood-muted);
+}
+
+/* ── MECHANICS SECTION ── */
+.mechanics-section {
+  position: relative;
+  z-index: 1;
+  padding: clamp(60px, 8vw, 120px) clamp(24px, 6vw, 100px);
+  background: linear-gradient(to bottom, transparent, rgba(17,2,5,.6), transparent);
+}
+
+.mechanics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: clamp(16px, 2vw, 24px);
+  max-width: 1400px;
+  margin: clamp(32px, 4vw, 56px) auto 0;
+}
+.mechanic-card {
+  background: var(--blood-surface);
+  border: 1px solid var(--blood-border);
+  border-radius: var(--radius-lg);
+  padding: clamp(24px, 2.5vw, 36px);
+  transition: transform var(--t-med), border-color var(--t-med);
+}
+.mechanic-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--blood-muted);
+}
+.mech-icon {
+  font-size: clamp(1.8rem, 2.5vw, 2.4rem);
+  margin-bottom: 14px;
+}
+.mechanic-card h3 {
+  font-family: var(--font-heading);
+  font-size: clamp(.95rem, 1.1vw, 1.1rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+.mechanic-card p {
+  font-size: clamp(.8rem, .88vw, .88rem);
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+/* ── ABILITIES PREVIEW ── */
+.abilities-preview {
+  position: relative;
+  z-index: 1;
+  padding: clamp(60px, 8vw, 120px) 0;
+  overflow: hidden;
+}
+.abilities-preview .section-eyebrow,
+.abilities-preview .section-title,
+.abilities-preview .section-desc,
+.abilities-preview .section-link {
+  padding-inline: clamp(24px, 6vw, 100px);
+}
+
+/* Infinite scrolling ticker */
+.abilities-ticker {
+  overflow: hidden;
+  padding: clamp(16px, 2vw, 24px) 0;
+  margin: 0;
+}
+.ticker-track {
+  display: flex;
+  gap: 16px;
+  animation: ticker-scroll 24s linear infinite;
+  width: max-content;
+}
+.ticker-track:hover { animation-play-state: paused; }
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.ability-pill {
+  white-space: nowrap;
+  padding: 10px 24px;
+  background: var(--blood-surface);
+  border: 1px solid var(--blood-border);
+  border-radius: 100px;
+  font-family: var(--font-heading);
+  font-size: clamp(.75rem, .9vw, .9rem);
+  color: var(--text-secondary);
+  transition: border-color var(--t-fast), color var(--t-fast);
+  cursor: default;
+}
+.ability-pill:hover {
+  border-color: var(--blood-core);
+  color: var(--text-primary);
+}
+
+/* ── CTA BANNER ── */
+.cta-banner {
+  position: relative;
+  z-index: 1;
+  padding: clamp(60px, 8vw, 120px) clamp(24px, 6vw, 100px);
+  text-align: center;
+  overflow: hidden;
+}
+.cta-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(140,20,30,.12) 0%, rgba(60,5,10,.08) 50%, rgba(140,20,30,.12) 100%);
+  z-index: 0;
+}
+.cta-banner::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--blood-core), transparent);
+}
+.cta-banner > * { position: relative; z-index: 1; }
+.cta-banner h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 4rem);
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  text-shadow: 0 0 40px rgba(180,32,48,.4);
+}
+.cta-banner p {
+  font-size: clamp(.9rem, 1.1vw, 1.1rem);
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto 36px;
+  line-height: 1.7;
+}
+
+/* Blood drip decoration */
+.cta-blood-drip {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  gap: clamp(30px, 4vw, 60px);
+  justify-content: center;
+  z-index: 0;
+  pointer-events: none;
+}
+.drip {
+  width: 3px;
+  background: linear-gradient(to bottom, var(--blood-core), transparent);
+  border-radius: 0 0 3px 3px;
+  animation: drip-fall var(--dur, 2s) var(--delay, 0s) ease-in infinite;
+  opacity: .5;
+}
+@keyframes drip-fall {
+  0%   { height: 0;  opacity: .6; transform: translateY(0); }
+  80%  { height: var(--h, 60px); opacity: .4; }
+  100% { height: var(--h, 60px); opacity: 0; transform: translateY(20px); }
+}
+
+/* ── RESPONSIVE ADJUSTMENTS ── */
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column;
+    padding-top: calc(var(--nav-h) + 24px);
+    text-align: center;
+    align-items: center;
+  }
+  .hero-content { max-width: 100%; }
+  .hero-cta { justify-content: center; }
+  .hero-stats { justify-content: center; }
+  .hero-subtitle { margin-inline: auto; }
+  .hero-character { margin: 32px auto 0; }
+  .scroll-indicator { display: none; }
+}
+@media (max-width: 600px) {
+  .story-grid { grid-template-columns: 1fr; }
+  .mechanics-grid { grid-template-columns: 1fr; }
+  .line-1, .line-2 { font-size: clamp(3.2rem, 16vw, 5rem); }
+}

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bloodbound — Play</title>
+  <link rel="stylesheet" href="global.css" />
+  <link rel="stylesheet" href="game.css" />
+</head>
+<body class="game-body">
+
+  <!-- ═══════════════════════════════════════════ LOADING SCREEN -->
+  <div class="loading-screen" id="loading-screen">
+    <div class="loading-logo">
+      <span class="logo-drop">⬡</span>
+      <span>BLOODBOUND</span>
+    </div>
+    <div class="loading-bar-wrap">
+      <div class="loading-bar" id="loading-bar"></div>
+    </div>
+    <p class="loading-tip" id="loading-tip">Binding the blood rune...</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ MAIN MENU OVERLAY -->
+  <div class="main-menu" id="main-menu">
+    <canvas id="menu-bg-canvas"></canvas>
+    <div class="menu-content">
+      <div class="menu-logo">
+        <div class="menu-logo-symbol">⬡</div>
+        <h1>BLOODBOUND</h1>
+        <p class="menu-tagline">Sacrifice to Survive</p>
+      </div>
+      <div class="menu-buttons">
+        <button class="menu-btn primary" id="btn-new-game">
+          <span class="menu-btn-icon">▶</span> New Game
+        </button>
+        <button class="menu-btn" id="btn-continue" disabled>
+          <span class="menu-btn-icon">↺</span> Continue
+        </button>
+        <button class="menu-btn" id="btn-settings">
+          <span class="menu-btn-icon">⚙</span> Settings
+        </button>
+        <button class="menu-btn" onclick="window.location.href='index.html'">
+          <span class="menu-btn-icon">⌂</span> Home
+        </button>
+      </div>
+      <div class="menu-footer">
+        <span>WASD / Arrow Keys — Move</span>
+        <span>Space — Attack</span>
+        <span>1–4 — Abilities</span>
+        <span>E — Interact</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ SETTINGS OVERLAY -->
+  <div class="overlay hidden" id="settings-overlay">
+    <div class="overlay-panel">
+      <h2 class="overlay-title">⚙ Settings</h2>
+      <div class="setting-row">
+        <label>Master Volume</label>
+        <input type="range" id="vol-master" min="0" max="100" value="70" />
+        <span id="vol-master-val">70</span>
+      </div>
+      <div class="setting-row">
+        <label>Music Volume</label>
+        <input type="range" id="vol-music" min="0" max="100" value="60" />
+        <span id="vol-music-val">60</span>
+      </div>
+      <div class="setting-row">
+        <label>SFX Volume</label>
+        <input type="range" id="vol-sfx" min="0" max="100" value="80" />
+        <span id="vol-sfx-val">80</span>
+      </div>
+      <div class="setting-row">
+        <label>Pixel Filter</label>
+        <button class="toggle-btn active" id="toggle-pixel">ON</button>
+      </div>
+      <div class="setting-row">
+        <label>Screen Shake</label>
+        <button class="toggle-btn active" id="toggle-shake">ON</button>
+      </div>
+      <button class="overlay-close-btn" id="close-settings">Close</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ CUTSCENE OVERLAY -->
+  <div class="cutscene-overlay hidden" id="cutscene-overlay">
+    <canvas id="cutscene-canvas"></canvas>
+    <div class="dialogue-box" id="dialogue-box">
+      <div class="dialogue-portrait" id="dialogue-portrait"></div>
+      <div class="dialogue-text-area">
+        <span class="dialogue-speaker" id="dialogue-speaker"></span>
+        <p class="dialogue-text" id="dialogue-text"></p>
+        <span class="dialogue-continue">▼ Press E to continue</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ GAME CONTAINER -->
+  <div class="game-container" id="game-container">
+
+    <!-- TOP HUD -->
+    <div class="hud hud-top" id="hud-top">
+      <div class="hud-left">
+        <div class="hud-portrait"></div>
+        <div class="hud-vitals">
+          <div class="hud-name">THE CURSED ONE</div>
+          <div class="bar-row">
+            <span class="bar-label">HP</span>
+            <div class="bar-track hp-track">
+              <div class="bar-fill hp-fill" id="hp-bar"></div>
+              <span class="bar-val" id="hp-val">100 / 100</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hud-center">
+        <div class="chapter-badge" id="chapter-badge">
+          <span class="chapter-num" id="chapter-num">I</span>
+          <span class="chapter-name" id="chapter-name">The Cursed Village</span>
+        </div>
+      </div>
+
+      <div class="hud-right">
+        <div class="hud-currency">
+          <span class="currency-icon">🩸</span>
+          <span class="currency-val" id="currency-val">0</span>
+        </div>
+        <button class="hud-icon-btn" id="btn-pause" title="Pause (ESC)">⏸</button>
+        <button class="hud-icon-btn" onclick="window.location.href='pages/shop.html'" title="Shop">🛒</button>
+      </div>
+    </div>
+
+    <!-- MAIN GAME CANVAS -->
+    <canvas id="game-canvas"></canvas>
+
+    <!-- BOTTOM HUD — ABILITIES BAR -->
+    <div class="hud hud-bottom" id="hud-bottom">
+      <div class="ability-slots">
+        <div class="ability-slot" id="slot-1" data-key="1">
+          <div class="slot-key">1</div>
+          <div class="slot-icon" id="ability-icon-1">⚡</div>
+          <div class="slot-name">Blood Surge</div>
+          <div class="slot-cost">10 HP</div>
+          <div class="slot-cooldown" id="cd-1"></div>
+        </div>
+        <div class="ability-slot" id="slot-2" data-key="2">
+          <div class="slot-key">2</div>
+          <div class="slot-icon" id="ability-icon-2">🌀</div>
+          <div class="slot-name">Crimson Whirl</div>
+          <div class="slot-cost">15 HP</div>
+          <div class="slot-cooldown" id="cd-2"></div>
+        </div>
+        <div class="ability-slot locked" id="slot-3" data-key="3">
+          <div class="slot-key">3</div>
+          <div class="slot-icon">🔒</div>
+          <div class="slot-name">Locked</div>
+          <div class="slot-cost">—</div>
+        </div>
+        <div class="ability-slot locked" id="slot-4" data-key="4">
+          <div class="slot-key">4</div>
+          <div class="slot-icon">🔒</div>
+          <div class="slot-name">Locked</div>
+          <div class="slot-cost">—</div>
+        </div>
+
+        <div class="ability-slot basic" id="slot-attack">
+          <div class="slot-key">SPC</div>
+          <div class="slot-icon">⚔️</div>
+          <div class="slot-name">Basic Attack</div>
+          <div class="slot-cost">Free</div>
+        </div>
+      </div>
+
+      <div class="hud-bottom-right">
+        <div class="minimap-wrap">
+          <canvas id="minimap-canvas" width="120" height="90"></canvas>
+          <span class="minimap-label">MAP</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAMAGE NUMBERS LAYER -->
+    <div class="damage-numbers-layer" id="damage-layer"></div>
+
+    <!-- BOSS HEALTH BAR (hidden until boss fight) -->
+    <div class="boss-hud hidden" id="boss-hud">
+      <div class="boss-name" id="boss-name">BOSS</div>
+      <div class="boss-bar-track">
+        <div class="boss-bar-fill" id="boss-hp-bar"></div>
+        <div class="boss-bar-phase" id="boss-phase-marker"></div>
+      </div>
+      <div class="boss-hp-val" id="boss-hp-val">500 / 500</div>
+    </div>
+
+    <!-- NOTIFICATION TOAST -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- PAUSE MENU -->
+    <div class="pause-menu hidden" id="pause-menu">
+      <div class="pause-panel">
+        <h2>— PAUSED —</h2>
+        <button class="menu-btn" id="btn-resume">▶ Resume</button>
+        <button class="menu-btn" onclick="window.location.href='pages/shop.html'">🛒 Shop</button>
+        <button class="menu-btn" id="btn-save">💾 Save Game</button>
+        <button class="menu-btn" id="btn-settings-pause">⚙ Settings</button>
+        <button class="menu-btn danger" id="btn-quit">⌂ Quit to Menu</button>
+      </div>
+    </div>
+
+    <!-- GAME OVER SCREEN -->
+    <div class="gameover-screen hidden" id="gameover-screen">
+      <div class="gameover-content">
+        <div class="gameover-symbol">💀</div>
+        <h2 class="gameover-title">YOU DIED</h2>
+        <p class="gameover-sub">The blood rune fades... but the curse endures.</p>
+        <div class="gameover-stats" id="gameover-stats"></div>
+        <button class="menu-btn primary" id="btn-retry">↺ Retry from Checkpoint</button>
+        <button class="menu-btn" id="btn-gameover-menu">⌂ Main Menu</button>
+      </div>
+    </div>
+
+    <!-- CHAPTER CLEAR SCREEN -->
+    <div class="chapter-clear hidden" id="chapter-clear">
+      <div class="clear-content">
+        <div class="clear-symbol">✦</div>
+        <h2 class="clear-title" id="clear-title">Chapter Complete</h2>
+        <p class="clear-sub" id="clear-sub"></p>
+        <div class="clear-rewards" id="clear-rewards"></div>
+        <button class="menu-btn primary" id="btn-next-chapter">Continue →</button>
+      </div>
+    </div>
+
+  </div><!-- /game-container -->
+
+  <!-- ═══════════════════════════════════════════ SCRIPTS -->
+  <script src="storage.js"></script>
+  <script src="assets.js"></script>
+  <script src="sprites.js"></script>
+  <script src="audio.js"></script>
+  <script src="particles.js"></script>
+  <script src="camera.js"></script>
+  <script src="map.js"></script>
+  <script src="combat.js"></script>
+  <script src="enemy.js"></script>
+  <script src="boss.js"></script>
+  <script src="player.js"></script>
+  <script src="ui.js"></script>
+  <script src="story.js"></script>
+  <script src="progression.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

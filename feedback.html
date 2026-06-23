@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bloodbound — Feedback</title>
+  <link rel="stylesheet" href="global.css" />
+  <link rel="stylesheet" href="feedback.css" />
+</head>
+<body class="page-body">
+
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-logo" onclick="window.location.href='index.html'" style="cursor:pointer">
+      <span class="logo-drop">⬡</span>
+      <span class="logo-text">BLOODBOUND</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="game.html">Play</a></li>
+      <li><a href="abilities.html">Abilities</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="controls.html">Controls</a></li>
+      <li><a href="progression.html">Progression</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="feedback.html">Feedback</a></li>
+      
+    </ul>
+    <button class="nav-play-btn" onclick="window.location.href='game.html'">
+      <span>PLAY NOW</span>
+    </button>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="mobile-drawer" id="mobile-drawer">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="game.html">Play</a></li>
+      <li><a href="abilities.html">Abilities</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="controls.html">Controls</a></li>
+      <li><a href="progression.html">Progression</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="feedback.html">Feedback</a></li>
+    </ul>
+  </div>
+
+  <!-- PAGE HERO -->
+  <header class="page-hero">
+    <div class="page-hero-eyebrow">— PLAYER VOICE —</div>
+    <h1 class="page-hero-title">Feedback</h1>
+    <p class="page-hero-desc">
+      Help us make Bloodbound better. Rate the game, report bugs,
+      suggest features, or just leave your thoughts. Every piece of
+      feedback is read by the developers.
+    </p>
+    <!-- Logged-in user badge -->
+    <div class="feedback-user-badge" id="feedback-user-badge">
+      <div class="user-badge-avatar" id="fb-avatar"></div>
+      <span id="fb-username">Guest</span>
+      <span class="user-badge-dot"></span>
+      <span id="fb-status">Not signed in — <a href="auth.html">Sign in</a> to save your feedback</span>
+    </div>
+  </header>
+
+  <!-- LIVE STATS BAR -->
+  <div class="feedback-stats-bar">
+    <div class="fb-stat">
+      <span class="fb-stat-val" id="stat-total">0</span>
+      <span class="fb-stat-label">Total Reviews</span>
+    </div>
+    <div class="fb-stat-divider">✦</div>
+    <div class="fb-stat">
+      <span class="fb-stat-val" id="stat-avg">—</span>
+      <span class="fb-stat-label">Avg Rating</span>
+    </div>
+    <div class="fb-stat-divider">✦</div>
+    <div class="fb-stat">
+      <span class="fb-stat-val" id="stat-bugs">0</span>
+      <span class="fb-stat-label">Bug Reports</span>
+    </div>
+    <div class="fb-stat-divider">✦</div>
+    <div class="fb-stat">
+      <span class="fb-stat-val" id="stat-suggestions">0</span>
+      <span class="fb-stat-label">Suggestions</span>
+    </div>
+  </div>
+
+  <main class="feedback-main">
+
+    <!-- LEFT COLUMN: forms -->
+    <div class="feedback-left">
+
+      <!-- ══════════════════ OVERALL RATING ══════════════════ -->
+      <section class="fb-card" id="section-rating">
+        <div class="fb-card-header">
+          <h2>⭐ Rate the Game</h2>
+          <p>How would you rate your overall Bloodbound experience?</p>
+        </div>
+
+        <div class="star-rating-wrap">
+          <div class="star-rating" id="star-rating" role="radiogroup" aria-label="Star rating">
+            <button class="star" data-val="1" aria-label="1 star">★</button>
+            <button class="star" data-val="2" aria-label="2 stars">★</button>
+            <button class="star" data-val="3" aria-label="3 stars">★</button>
+            <button class="star" data-val="4" aria-label="4 stars">★</button>
+            <button class="star" data-val="5" aria-label="5 stars">★</button>
+          </div>
+          <span class="star-label" id="star-label">Click to rate</span>
+        </div>
+
+        <!-- Category ratings -->
+        <div class="category-ratings">
+          <div class="cat-rating-row">
+            <span class="cat-label">Gameplay</span>
+            <div class="cat-stars" data-cat="gameplay">
+              <button class="cat-star" data-val="1">★</button>
+              <button class="cat-star" data-val="2">★</button>
+              <button class="cat-star" data-val="3">★</button>
+              <button class="cat-star" data-val="4">★</button>
+              <button class="cat-star" data-val="5">★</button>
+            </div>
+          </div>
+          <div class="cat-rating-row">
+            <span class="cat-label">Story</span>
+            <div class="cat-stars" data-cat="story">
+              <button class="cat-star" data-val="1">★</button>
+              <button class="cat-star" data-val="2">★</button>
+              <button class="cat-star" data-val="3">★</button>
+              <button class="cat-star" data-val="4">★</button>
+              <button class="cat-star" data-val="5">★</button>
+            </div>
+          </div>
+          <div class="cat-rating-row">
+            <span class="cat-label">Visuals</span>
+            <div class="cat-stars" data-cat="visuals">
+              <button class="cat-star" data-val="1">★</button>
+              <button class="cat-star" data-val="2">★</button>
+              <button class="cat-star" data-val="3">★</button>
+              <button class="cat-star" data-val="4">★</button>
+              <button class="cat-star" data-val="5">★</button>
+            </div>
+          </div>
+          <div class="cat-rating-row">
+            <span class="cat-label">Difficulty</span>
+            <div class="cat-stars" data-cat="difficulty">
+              <button class="cat-star" data-val="1">★</button>
+              <button class="cat-star" data-val="2">★</button>
+              <button class="cat-star" data-val="3">★</button>
+              <button class="cat-star" data-val="4">★</button>
+              <button class="cat-star" data-val="5">★</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════ REVIEW / COMMENT ══════════════════ -->
+      <section class="fb-card" id="section-review">
+        <div class="fb-card-header">
+          <h2>💬 Leave a Review</h2>
+          <p>Share your thoughts on the game in detail.</p>
+        </div>
+        <form class="fb-form" id="review-form" onsubmit="submitReview(event)">
+          <div class="form-group">
+            <label for="review-name">Display Name</label>
+            <div class="input-wrap">
+              <span class="input-icon">⚔</span>
+              <input
+                type="text"
+                id="review-name"
+                placeholder="Your name or username"
+                maxlength="30"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="review-chapter">
+              How far did you get?
+            </label>
+            <select id="review-chapter" class="fb-select">
+              <option value="">Select your progress</option>
+              <option value="ch1">Chapter I — The Cursed Village</option>
+              <option value="ch2">Chapter II — The Hollow Dungeon</option>
+              <option value="ch3">Chapter III — The Crimson Castle</option>
+              <option value="ch4">Chapter IV — The Blood Temple</option>
+              <option value="ch5">Chapter V — Completed the game! ✓</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="review-text">
+              Your Review
+              <span class="char-count" id="review-count">0 / 500</span>
+            </label>
+            <textarea
+              id="review-text"
+              rows="5"
+              maxlength="500"
+              placeholder="What did you love? What was frustrating? Any standout moments?..."
+              required
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label>Would you recommend this game?</label>
+            <div class="recommend-btns">
+              <button type="button" class="recommend-btn" data-val="yes" onclick="setRecommend('yes', this)">
+                👍 Yes, recommend it
+              </button>
+              <button type="button" class="recommend-btn" data-val="no" onclick="setRecommend('no', this)">
+                👎 Not quite
+              </button>
+            </div>
+          </div>
+          <div class="form-error hidden" id="review-error"></div>
+          <button type="submit" class="fb-submit-btn">
+            <span>Submit Review</span>
+          </button>
+        </form>
+      </section>
+
+      <!-- ══════════════════ BUG REPORT ══════════════════ -->
+      <section class="fb-card" id="section-bug">
+        <div class="fb-card-header">
+          <h2>🐛 Report a Bug</h2>
+          <p>Found something broken? Help us squash it.</p>
+        </div>
+        <form class="fb-form" id="bug-form" onsubmit="submitBug(event)">
+          <div class="form-group">
+            <label for="bug-title">Bug Title <span class="label-note">(short summary)</span></label>
+            <div class="input-wrap">
+              <span class="input-icon">⚠</span>
+              <input
+                type="text"
+                id="bug-title"
+                placeholder="e.g. Player clips through wall in Chapter II"
+                maxlength="80"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="bug-chapter">Chapter / Area</label>
+              <select id="bug-chapter" class="fb-select" required>
+                <option value="">Select area</option>
+                <option>Main Menu</option>
+                <option>Chapter I — Village</option>
+                <option>Chapter II — Dungeon</option>
+                <option>Chapter III — Castle</option>
+                <option>Chapter IV — Temple</option>
+                <option>Chapter V — Final Realm</option>
+                <option>Shop</option>
+                <option>HUD / UI</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="bug-severity">Severity</label>
+              <select id="bug-severity" class="fb-select" required>
+                <option value="">Select severity</option>
+                <option value="low">Low — Minor visual glitch</option>
+                <option value="medium">Medium — Affects gameplay</option>
+                <option value="high">High — Game-breaking</option>
+                <option value="crash">Critical — Game crashes</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="bug-steps">Steps to Reproduce</label>
+            <textarea
+              id="bug-steps"
+              rows="4"
+              maxlength="600"
+              placeholder="1. Open the game&#10;2. Go to Chapter II&#10;3. Walk into the north wall of room B2&#10;4. Player clips through..."
+              required
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label for="bug-expected">What Should Have Happened?</label>
+            <textarea
+              id="bug-expected"
+              rows="2"
+              maxlength="200"
+              placeholder="The player should stop at the wall boundary."
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label for="bug-browser">Browser & OS <span class="label-note">(optional)</span></label>
+            <div class="input-wrap">
+              <span class="input-icon">🖥</span>
+              <input
+                type="text"
+                id="bug-browser"
+                placeholder="e.g. Chrome 124 on Windows 11"
+                id="bug-browser-input"
+              />
+            </div>
+          </div>
+          <div class="form-error hidden" id="bug-error"></div>
+          <button type="submit" class="fb-submit-btn bug-btn">
+            <span>Submit Bug Report</span>
+          </button>
+        </form>
+      </section>
+
+      <!-- ══════════════════ FEATURE SUGGESTION ══════════════════ -->
+      <section class="fb-card" id="section-suggestion">
+        <div class="fb-card-header">
+          <h2>💡 Suggest a Feature</h2>
+          <p>Have an idea that would make the game better? We want to hear it.</p>
+        </div>
+        <form class="fb-form" id="suggestion-form" onsubmit="submitSuggestion(event)">
+          <div class="form-group">
+            <label for="suggest-title">Feature Title</label>
+            <div class="input-wrap">
+              <span class="input-icon">💡</span>
+              <input
+                type="text"
+                id="suggest-title"
+                placeholder="e.g. Add a dodge roll ability"
+                maxlength="80"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="suggest-category">Category</label>
+            <select id="suggest-category" class="fb-select" required>
+              <option value="">Select category</option>
+              <option>New Ability</option>
+              <option>Combat Mechanic</option>
+              <option>Story / Lore</option>
+              <option>New Enemy Type</option>
+              <option>Boss Fight</option>
+              <option>Visual / Art</option>
+              <option>Audio / Music</option>
+              <option>UI / HUD</option>
+              <option>Accessibility</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="suggest-desc">
+              Describe Your Idea
+              <span class="char-count" id="suggest-count">0 / 400</span>
+            </label>
+            <textarea
+              id="suggest-desc"
+              rows="5"
+              maxlength="400"
+              placeholder="Describe your feature idea in as much detail as you like. Why would it be fun? How would it work?..."
+              required
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label>Priority — How important is this to you?</label>
+            <div class="priority-btns">
+              <button type="button" class="priority-btn" data-val="nice" onclick="setPriority('nice', this)">
+                😊 Nice to have
+              </button>
+              <button type="button" class="priority-btn" data-val="want" onclick="setPriority('want', this)">
+                🔥 Really want it
+              </button>
+              <button type="button" class="priority-btn" data-val="need" onclick="setPriority('need', this)">
+                ⚡ Game needs this
+              </button>
+            </div>
+          </div>
+          <div class="form-error hidden" id="suggest-error"></div>
+          <button type="submit" class="fb-submit-btn suggest-btn">
+            <span>Submit Suggestion</span>
+          </button>
+        </form>
+      </section>
+
+    </div><!-- /feedback-left -->
+
+    <!-- RIGHT COLUMN: community reviews + leaderboard -->
+    <div class="feedback-right">
+
+      <!-- ══════ RATING BREAKDOWN ══════ -->
+      <div class="fb-card sticky-card" id="rating-breakdown">
+        <div class="fb-card-header">
+          <h2>📊 Rating Breakdown</h2>
+        </div>
+        <div class="big-rating">
+          <span class="big-rating-num" id="big-rating-num">—</span>
+          <div class="big-rating-right">
+            <div class="big-stars" id="big-stars">☆☆☆☆☆</div>
+            <span class="big-rating-count" id="big-rating-count">No ratings yet</span>
+          </div>
+        </div>
+        <div class="rating-bars" id="rating-bars">
+          <div class="rating-bar-row">
+            <span class="rb-label">5★</span>
+            <div class="rb-track"><div class="rb-fill rb-5" id="rb-5" style="width:0%"></div></div>
+            <span class="rb-count" id="rc-5">0</span>
+          </div>
+          <div class="rating-bar-row">
+            <span class="rb-label">4★</span>
+            <div class="rb-track"><div class="rb-fill rb-4" id="rb-4" style="width:0%"></div></div>
+            <span class="rb-count" id="rc-4">0</span>
+          </div>
+          <div class="rating-bar-row">
+            <span class="rb-label">3★</span>
+            <div class="rb-track"><div class="rb-fill rb-3" id="rb-3" style="width:0%"></div></div>
+            <span class="rb-count" id="rc-3">0</span>
+          </div>
+          <div class="rating-bar-row">
+            <span class="rb-label">2★</span>
+            <div class="rb-track"><div class="rb-fill rb-2" id="rb-2" style="width:0%"></div></div>
+            <span class="rb-count" id="rc-2">0</span>
+          </div>
+          <div class="rating-bar-row">
+            <span class="rb-label">1★</span>
+            <div class="rb-track"><div class="rb-fill rb-1" id="rb-1" style="width:0%"></div></div>
+            <span class="rb-count" id="rc-1">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════ COMMUNITY REVIEWS ══════ -->
+      <div class="fb-card" id="community-reviews">
+        <div class="fb-card-header">
+          <h2>🗣 Community Reviews</h2>
+          <div class="review-filter-row">
+            <select class="fb-select small" id="review-sort" onchange="sortReviews(this.value)">
+              <option value="newest">Newest First</option>
+              <option value="highest">Highest Rated</option>
+              <option value="lowest">Lowest Rated</option>
+            </select>
+            <select class="fb-select small" id="review-filter-ch" onchange="filterReviews(this.value)">
+              <option value="all">All Progress</option>
+              <option value="ch1">Chapter I</option>
+              <option value="ch2">Chapter II</option>
+              <option value="ch3">Chapter III</option>
+              <option value="ch4">Chapter IV</option>
+              <option value="ch5">Completed</option>
+            </select>
+          </div>
+        </div>
+        <div class="reviews-list" id="reviews-list">
+          <!-- Populated by JS -->
+          <div class="reviews-empty" id="reviews-empty">
+            <span>🩸</span>
+            <p>No reviews yet. Be the first to leave one!</p>
+          </div>
+        </div>
+        <button class="load-more-btn hidden" id="load-more-btn" onclick="loadMoreReviews()">
+          Load More Reviews
+        </button>
+      </div>
+
+      <!-- ══════ BUG TRACKER ══════ -->
+      <div class="fb-card" id="bug-tracker">
+        <div class="fb-card-header">
+          <h2>🐛 Recent Bug Reports</h2>
+          <p>Known issues submitted by players.</p>
+        </div>
+        <div class="bug-list" id="bug-list">
+          <div class="reviews-empty" id="bugs-empty">
+            <span>✅</span>
+            <p>No bugs reported yet. The blood flows cleanly.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════ TOP SUGGESTIONS ══════ -->
+      <div class="fb-card" id="top-suggestions">
+        <div class="fb-card-header">
+          <h2>💡 Top Suggestions</h2>
+          <p>Vote for features you want most.</p>
+        </div>
+        <div class="suggestions-list" id="suggestions-list">
+          <div class="reviews-empty" id="suggestions-empty">
+            <span>💭</span>
+            <p>No suggestions yet. Share your ideas!</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /feedback-right -->
+
+  </main>
+
+  <!-- SUCCESS TOAST TEMPLATE (injected by JS) -->
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-logo"><span class="logo-drop">⬡</span> BLOODBOUND</div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="game.html">Play</a>
+      <a href="abilities.html">Abilities</a>
+      <a href="shop.html">Shop</a>
+      <a href="controls.html">Controls</a>
+      <a href="progression.html">Progression</a>
+      <a href="about.html">About</a>
+      <a href="feedback.html">Feedback</a>
+    </div>
+    <div class="footer-credits">
+      <p>Created by Bentley J.B. & Koushik M. — ICD20 — Mr. McRae — May 2026</p>
+    </div>
+  </footer>
+
+  <script src="feedback.js"></script>
+  <script src="pages.js"></script>
+</body>
+</html>

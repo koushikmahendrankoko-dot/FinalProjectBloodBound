@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bloodbound — About</title>
+  <link rel="stylesheet" href="global.css" />
+  <link rel="stylesheet" href="pages.css" />
+</head>
+<body class="page-body">
+
+  <canvas id="bg-canvas"></canvas>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-logo" onclick="window.location.href='index.html'" style="cursor:pointer">
+      <span class="logo-drop">⬡</span><span class="logo-text">BLOODBOUND</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="game.html">Play</a></li>
+      <li><a href="abilities.html">Abilities</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="controls.html">Controls</a></li>
+      <li><a href="progression.html">Progression</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+    </ul>
+    <button class="nav-play-btn" onclick="window.location.href='game.html'"><span>PLAY NOW</span></button>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="mobile-drawer" id="mobile-drawer">
+    <ul>
+      <li><a href="index.html">Home</a></li><li><a href="game.html">Play</a></li>
+      <li><a href="abilities.html">Abilities</a></li><li><a href="shop.html">Shop</a></li>
+      <li><a href="controls.html">Controls</a></li><li><a href="progression.html">Progression</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </div>
+
+  <header class="page-hero">
+    <div class="page-hero-eyebrow">— THE DEVELOPERS —</div>
+    <h1 class="page-hero-title">About Us</h1>
+    <p class="page-hero-desc">Bloodbound is a student project built with passion, code, and a dangerous amount of caffeine. Here's the story behind the story.</p>
+  </header>
+
+  <main class="page-main">
+
+    <!-- DEVELOPER CARDS -->
+    <section class="controls-section">
+      <h2 class="controls-section-title">👥 The Team</h2>
+      <div class="dev-cards">
+
+        <div class="dev-card">
+          <div class="dev-avatar">
+            <div class="dev-pixel-portrait bentley"></div>
+          </div>
+          <div class="dev-info">
+            <h3>Bentley J.B.</h3>
+            <div class="dev-role">Lead Developer · Game Engine · Combat System</div>
+            <p>Responsible for the core game engine, player mechanics, combat system, and the blood-sacrifice ability framework. Designed the enemy AI pathfinding and boss fight patterns. Also handled the overall architecture of the JavaScript game loop.</p>
+            <div class="dev-tags">
+              <span class="dev-tag">JavaScript</span>
+              <span class="dev-tag">Canvas API</span>
+              <span class="dev-tag">Game Design</span>
+              <span class="dev-tag">Combat Logic</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dev-card">
+          <div class="dev-avatar">
+            <div class="dev-pixel-portrait koushik"></div>
+          </div>
+          <div class="dev-info">
+            <h3>Koushik M.</h3>
+            <div class="dev-role">Lead Designer · UI/UX · Pixel Art · Story</div>
+            <p>Responsible for all visual design, pixel art sprites, UI styling, and the narrative arc of all five chapters. Designed the website layout, the dark red visual identity, and wrote the story and dialogue for every NPC and cutscene in the game.</p>
+            <div class="dev-tags">
+              <span class="dev-tag">CSS / HTML</span>
+              <span class="dev-tag">Pixel Art</span>
+              <span class="dev-tag">UI Design</span>
+              <span class="dev-tag">Storytelling</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PROJECT DETAILS -->
+    <section class="controls-section">
+      <h2 class="controls-section-title">📋 Project Details</h2>
+      <div class="project-details-grid">
+        <div class="detail-item">
+          <span class="detail-label">Course</span>
+          <span class="detail-val">ICD20 — Introduction to Computer Design</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Teacher</span>
+          <span class="detail-val">Mr. McRae</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Submitted</span>
+          <span class="detail-val">May 24, 2026</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Built With</span>
+          <span class="detail-val">HTML5, CSS3, Vanilla JavaScript, Canvas API</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">No Libraries</span>
+          <span class="detail-val">All code written from scratch — no frameworks, no game engines</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Playtime</span>
+          <span class="detail-val">2+ hours across 5 chapters</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- INSPIRATION -->
+    <section class="controls-section">
+      <h2 class="controls-section-title">💡 Inspiration & Design Goals</h2>
+      <div class="inspiration-text">
+        <p>Bloodbound started as a simple question: <em>what if your health bar was also your mana bar?</em> Most RPGs treat HP as a resource to protect and mana/energy as a resource to spend. We wanted to collapse those two into one — forcing players into every fight as a genuine risk-reward calculation.</p>
+
+        <p>The primary inspirations were <strong>The Legend of Zelda</strong> (overworld exploration, dungeon structure, item discovery), <strong>Hades</strong> (fast combat, blood/sacrifice themes), and early <strong>Pokémon</strong> games (NPC dialogue, pixel world design, chapter progression).</p>
+
+        <p>The dark red visual identity was chosen deliberately to represent blood — not in a gratuitous way, but as a symbol of the game's core mechanic. The blood you spend to fight is the same blood that keeps you alive. Every ability is a gamble, and the visual design should make you feel that weight.</p>
+
+        <p>We built everything — the tile renderer, camera system, particle effects, dialogue engine, save system, enemy AI — entirely from scratch using the Canvas API and vanilla JavaScript. No game engines. No libraries. Just code.</p>
+      </div>
+    </section>
+
+    <!-- TECH STACK -->
+    <section class="controls-section">
+      <h2 class="controls-section-title">🛠 Technical Highlights</h2>
+      <div class="tech-grid">
+        <div class="tech-card">
+          <div class="tech-icon">🎮</div>
+          <h4>Custom Game Loop</h4>
+          <p>60fps requestAnimationFrame loop with delta time calculation for consistent gameplay across all devices.</p>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon">🗺</div>
+          <h4>Tile Map Renderer</h4>
+          <p>JSON-based tilemap system with collision detection, multiple layers (floor, walls, overlay), and smooth camera scrolling.</p>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon">🤖</div>
+          <h4>Enemy AI</h4>
+          <p>State-machine based AI (patrol → detect → chase → attack → retreat). Boss AI with multiple phases and pattern changes.</p>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon">✨</div>
+          <h4>Particle System</h4>
+          <p>Custom particle engine for blood splatter, ability effects, hit sparks, and ambient environment particles.</p>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon">💾</div>
+          <h4>Save System</h4>
+          <p>localStorage-based save system preserving HP, chapter progress, inventory, shop purchases, and story flags.</p>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon">🎨</div>
+          <h4>Sprite Animation</h4>
+          <p>Spritesheet-based animation system with named states (idle, walk, attack, hurt, death) and frame timing control.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="page-return">
+    <button class="btn-primary" onclick="window.location.href='game.html'">▶ Play Bloodbound</button>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-logo"><span class="logo-drop">⬡</span> BLOODBOUND</div>
+    <div class="footer-links">
+      <a href="index.html">Home</a><a href="game.html">Play</a>
+      <a href="abilities.html">Abilities</a><a href="shop.html">Shop</a>
+      <a href="controls.html">Controls</a><a href="progression.html">Progression</a>
+      <a href="about.html">About</a>
+    </div>
+    <div class="footer-credits"><p>Created by Bentley J.B. & Koushik M. — ICD20 — Mr. McRae — May 2026</p></div>
+  </footer>
+
+  <script src="../js/pages.js"></script>
+</body>
+</html>
