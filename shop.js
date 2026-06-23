@@ -46,12 +46,19 @@ function initShopTabs() {
 }
 
 function loadShopState() {
-  // BB.isLoggedIn() is now fixed in storage.js — just checks bb_current_user
-  if (!window.BB || !window.BB.isLoggedIn()) {
+  // FIXED: Check storage directly if BB object is not ready yet
+  const isLoggedIn = (window.BB && typeof window.BB.isLoggedIn === 'function') 
+                     ? window.BB.isLoggedIn() 
+                     : (localStorage.getItem('bb_current_user') !== null);
+
+  if (!isLoggedIn) {
     shopSaveData = null;
     return;
   }
-  shopSaveData = window.BB.getSaveData();
+  
+  shopSaveData = (window.BB && typeof window.BB.getSaveData === 'function') 
+                 ? window.BB.getSaveData() 
+                 : JSON.parse(localStorage.getItem('bb_save_data') || '{}');
 }
 
 function renderShopState() {
@@ -66,7 +73,7 @@ function renderShopState() {
     return;
   }
 
-  currencyEl.textContent = shopSaveData.bloodCoins;
+  currencyEl.textContent = shopSaveData.bloodCoins || 0;
   currencyEl.onclick = null;
   currencyEl.style.cursor = 'default';
 
@@ -154,7 +161,6 @@ function purchaseItem(id, cost, btn) {
         shopSaveData.unlockedAbilities.push(item.ability);
       const slotKey='slot'+item.slot;
       if (!shopSaveData.abilities[slotKey]) shopSaveData.abilities[slotKey]=item.ability;
-      // Check if all 7 abilities unlocked
       if (shopSaveData.unlockedAbilities.length >= 7) {
         window.Achievements?.unlock('all_abilities');
       }
@@ -173,7 +179,6 @@ function purchaseItem(id, cost, btn) {
 
   window.BB.saveSaveData(shopSaveData);
 
-  // Achievements
   if (window.Achievements) {
     window.Achievements.unlock('shop_first');
   }

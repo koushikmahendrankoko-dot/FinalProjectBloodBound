@@ -4,11 +4,7 @@
 ═══════════════════════════════════════════════════════════════ */
 
 /* ── GOOGLE IDENTITY INITIALIZATION ──
-   ⚠ PASTE YOUR REAL GOOGLE OAUTH CLIENT ID BELOW ⚠
-   Get this from Google Cloud Console > APIs & Services > Credentials,
-   under your OAuth 2.0 Client ID, once your site is on its published
-   domain (Google Sign-In requires the domain to be registered there).
-   This is the ONLY place the client ID needs to be set. */
+   ⚠ PASTE YOUR REAL GOOGLE OAUTH CLIENT ID BELOW ⚠ */
 const GOOGLE_CLIENT_ID = "PASTE_YOUR_REAL_GOOGLE_OAUTH_CLIENT_ID_HERE";
 
 window.onload = function () {
@@ -22,7 +18,6 @@ window.onload = function () {
     callback: handleGoogleSignIn
   });
 
-  // Render into both mount points: sign-in tab and register tab
   const signinBtn = document.getElementById("google-signin-btn");
   if (signinBtn) {
     google.accounts.id.renderButton(signinBtn, {
@@ -45,21 +40,33 @@ let currentAuthTab = 'signin';
 document.addEventListener('DOMContentLoaded', () => {
   renderSavedAccounts();
 
-  // If already logged in, show profile panel view immediately
+  // FIX: Check current location
+  const isAuthPage = window.location.pathname.includes('auth.html');
+  
+  // Get user session
   let loggedInUser = localStorage.getItem('bb_current_user');
   if (!loggedInUser && window.BB && typeof window.BB.isLoggedIn === 'function' && window.BB.isLoggedIn()) {
     loggedInUser = window.BB.getCurrentUser();
   }
 
+  // If user IS logged in
   if (loggedInUser) {
-    showSuccessState(loggedInUser, true);
+    if (isAuthPage) {
+      showSuccessState(loggedInUser, true);
+    }
+    // If not on auth page, we do nothing and let them access the shop
+  } else {
+    // If NOT logged in and we are NOT on the auth page, force them to sign in
+    if (!isAuthPage) {
+      window.location.href = 'auth.html';
+    }
   }
 
   // Live password strength meter
   const regPw = document.getElementById('reg-password');
   if (regPw) regPw.addEventListener('input', updatePasswordStrength);
 
-  // Username sanitization (letters/numbers only) on register
+  // Username sanitization
   const regUser = document.getElementById('reg-username');
   if (regUser) {
     regUser.addEventListener('input', () => {
@@ -166,7 +173,6 @@ function handleEmailSignIn(event) {
   setTimeout(() => {
     try {
       if (!window.BB || typeof window.BB.verifyLogin !== 'function') {
-        console.warn("window.BB engine not detected. Using simulation fallback.");
         localStorage.setItem('bb_current_user', username);
         setLoading(submitBtn, false);
         showSuccessState(username, false);

@@ -1,4 +1,22 @@
 /* ═══════════════════════════════════════════════════════════════
+   BLOODBOUND — Global Bridge
+   Ensures the Shop and Game can share authentication state.
+═══════════════════════════════════════════════════════════════ */
+
+window.BB = window.BB || {};
+
+window.BB.isLoggedIn = function() {
+  return localStorage.getItem('bb_current_user') !== null;
+};
+
+window.BB.getSaveData = function() {
+  const data = localStorage.getItem('bb_save_data');
+  return data ? JSON.parse(data) : { bloodCoins: 0, purchases: [] };
+};
+
+// ... YOUR EXISTING main.js CODE STARTS HERE ...
+
+/* ═══════════════════════════════════════════════════════════════
    BLOODBOUND — main.js (v3 — Elden Ring edition)
    Mouse-click attack, right-click parry, Shift dodge roll,
    mouse world-position passed to player each frame.
