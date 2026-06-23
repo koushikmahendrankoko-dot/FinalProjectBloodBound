@@ -1,171 +1,156 @@
 /* ═══════════════════════════════════════════════════════════════
-   BLOODBOUND — boss.js (v3 — Elden Ring edition)
-   Multi-phase bosses, telegraphed wind-ups, hit-stop on heavy
-   attacks, knockback, phase-transition cinematics, arena
-   atmospheric effects, achievement hooks. All 5 bosses.
+   BLOODBOUND — boss.js
+   Multi-phase boss encounters for all 5 chapters.
+   Each boss has phase thresholds, unique attack patterns,
+   and telegraphed wind-ups for fairness.
 ═══════════════════════════════════════════════════════════════ */
 
 const BOSS_DEFS = {
   village_guardian: {
-    name:'The Village Guardian', maxHp:220, speed:1.3, size:48,
-    phases:[
-      {threshold:1.0, pattern:'sweep',   cooldown:2200},
-      {threshold:0.5, pattern:'pillars', cooldown:1800}
+    name: 'The Village Guardian',
+    maxHp: 200,
+    speed: 1.3,
+    color: '#8b1a24',
+    size: 44,
+    phases: [
+      { threshold: 1.0, pattern: 'sweep' },
+      { threshold: 0.5, pattern: 'pillars' }
     ]
   },
   hollow_beast: {
-    name:'The Hollow Beast', maxHp:340, speed:1.6, size:54,
-    phases:[
-      {threshold:1.0,  pattern:'emerge',  cooldown:2000},
-      {threshold:0.6,  pattern:'charge',  cooldown:1600},
-      {threshold:0.25, pattern:'berserk', cooldown:1000}
+    name: 'The Hollow Beast',
+    maxHp: 320,
+    speed: 1.5,
+    color: '#5a1a30',
+    size: 52,
+    phases: [
+      { threshold: 1.0,  pattern: 'emerge' },
+      { threshold: 0.6,  pattern: 'charge' },
+      { threshold: 0.25, pattern: 'berserk' }
     ]
   },
   lord_vael: {
-    name:'Lord Vael', maxHp:400, speed:1.9, size:44,
-    phases:[
-      {threshold:1.0,  pattern:'sword',       cooldown:1800},
-      {threshold:0.65, pattern:'summon',      cooldown:2400},
-      {threshold:0.3,  pattern:'rune_reveal', cooldown:1400}
+    name: 'Lord Vael',
+    maxHp: 380,
+    speed: 1.8,
+    color: '#6a1020',
+    size: 40,
+    phases: [
+      { threshold: 1.0,  pattern: 'sword' },
+      { threshold: 0.65, pattern: 'summon' },
+      { threshold: 0.3,  pattern: 'rune_reveal' }
     ]
   },
   blood_guardians: {
-    name:'The Four Guardians', maxHp:480, speed:1.2, size:46,
-    phases:[
-      {threshold:1.0,  pattern:'flame',  cooldown:2000},
-      {threshold:0.75, pattern:'stone',  cooldown:1800},
-      {threshold:0.5,  pattern:'shadow', cooldown:1600},
-      {threshold:0.25, pattern:'blood',  cooldown:1400}
+    name: 'The Four Guardians',
+    maxHp: 450,
+    speed: 1.2,
+    color: '#7a1a28',
+    size: 42,
+    phases: [
+      { threshold: 1.0,  pattern: 'flame' },
+      { threshold: 0.75, pattern: 'stone' },
+      { threshold: 0.5,  pattern: 'shadow' },
+      { threshold: 0.25, pattern: 'blood' }
     ]
   },
   blood_god: {
-    name:'The Blood God', maxHp:650, speed:1.7, size:60,
-    phases:[
-      {threshold:1.0,  pattern:'orbs',        cooldown:1800},
-      {threshold:0.8,  pattern:'fracture',    cooldown:1600},
-      {threshold:0.55, pattern:'absorb',      cooldown:2000},
-      {threshold:0.3,  pattern:'desperation', cooldown:1200},
-      {threshold:0.1,  pattern:'final',       cooldown:1000}
+    name: 'The Blood God',
+    maxHp: 600,
+    speed: 1.6,
+    color: '#ff3347',
+    size: 56,
+    phases: [
+      { threshold: 1.0,  pattern: 'orbs' },
+      { threshold: 0.8,  pattern: 'fracture' },
+      { threshold: 0.55, pattern: 'absorb' },
+      { threshold: 0.3,  pattern: 'desperation' },
+      { threshold: 0.1,  pattern: 'final' }
     ]
   }
 };
 
-/* Global stagger token — prevents all enemies attacking at once */
-let _globalAttackToken = 0;
-
 class Boss {
   constructor(type, tx, ty) {
     this.type = type;
-    this.def  = BOSS_DEFS[type] || BOSS_DEFS.village_guardian;
+    this.def = BOSS_DEFS[type] || BOSS_DEFS.village_guardian;
     this.name = this.def.name;
 
     this.maxHp = this.def.maxHp;
-    this.hp    = this.def.maxHp;
+    this.hp = this.def.maxHp;
     this.speed = this.def.speed;
+    this.color = this.def.color;
 
-    this.width  = this.def.size;
+    this.width = this.def.size;
     this.height = this.def.size;
-    this.x = tx * Sprites.TILE_SIZE - this.width  / 2;
+
+    this.x = tx * Sprites.TILE_SIZE - this.width / 2;
     this.y = ty * Sprites.TILE_SIZE - this.height / 2;
 
     this.currentPhaseIndex = 0;
     this.phase = this.def.phases[0].pattern;
-    this.attackCooldown = this.def.phases[0].cooldown;
-    this.attackTimer    = this.attackCooldown;
+    this.phaseTransitioning = false;
+    this.phaseTransitionTimer = 0;
 
-    // Wind-up state machine
-    this.isWindingUp    = false;
-    this.windupTimer    = 0;
-    this.currentAttack  = null;
+    this.state = 'intro';
+    this.introTimer = 1500;
 
-    // Phase transition
-    this.phaseTransitioning    = false;
-    this.phaseTransitionTimer  = 0;
-    this.PHASE_TRANSITION_MS   = 1200;
+    this.attackTimer = 2000;
+    this.attackCooldown = 2000;
+    this.windupTimer = 0;
+    this.isWindingUp = false;
+    this.currentAttack = null;
 
-    // Intro
-    this.state      = 'intro';
-    this.introTimer = 1800;
+    this.facing = 'down';
+    this.hurtTimer = 0;
+    this.staggerTimer = 0;
 
-    // Hurt / knockback
-    this.hurtTimer  = 0;
-    this.knockVx    = 0;
-    this.knockVy    = 0;
+    this.defeated = false;
+    this.defeatTimer = 0;
 
-    // Death
-    this.dead       = false;
-    this.deathTimer = 0;
-
-    // Arena ambient particles timer
-    this.ambientTimer = 0;
+    this.summonedMinions = [];
+    this.dialogueShown = new Set();
   }
 
-  get cx() { return this.x + this.width  / 2; }
+  get cx() { return this.x + this.width / 2; }
   get cy() { return this.y + this.height / 2; }
-  get hpPct() { return this.hp / this.maxHp; }
 
-  getBounds() { return { x:this.x+6, y:this.y+6, w:this.width-12, h:this.height-12 }; }
+  getBounds() {
+    return { x: this.x + 4, y: this.y + 4, w: this.width - 8, h: this.height - 8 };
+  }
 
   takeDamage(amount) {
-    if (this.dead || this.state==='intro') return;
+    if (this.defeated || this.state === 'intro') return;
     this.hp -= amount;
     this.hurtTimer = 200;
 
     if (this.hp <= 0) {
-      this.hp   = 0;
-      this.dead = true;
-      if (window.Particles) Particles.bossPhaseTransition(this.cx, this.cy);
-      if (window.__activeCamera) {
-        window.__activeCamera.hitStop(200);
-        window.__activeCamera.shake(18, 800, 'crit');
-      }
-      // Achievement
-      if (window.Achievements) {
-        window.Achievements.unlock('first_kill');
-        window.Achievements.increment('kills',[[1,'first_kill']]);
-        // No-damage boss achievement checked in main.js
-      }
+      this.hp = 0;
+      this.defeated = true;
+      this.defeatTimer = 0;
+      Particles.bossPhaseTransition(this.cx, this.cy);
       return;
     }
 
-    // Phase check
-    const nextIdx = this.currentPhaseIndex + 1;
-    if (nextIdx < this.def.phases.length &&
-        this.hpPct <= this.def.phases[nextIdx].threshold) {
-      this._transitionPhase(nextIdx);
+    const hpRatio = this.hp / this.maxHp;
+    const nextPhaseIdx = this.currentPhaseIndex + 1;
+    if (nextPhaseIdx < this.def.phases.length && hpRatio <= this.def.phases[nextPhaseIdx].threshold) {
+      this._transitionPhase(nextPhaseIdx);
     }
-  }
-
-  applyKnockback(vx, vy) {
-    // Bosses resist knockback heavily
-    this.knockVx += vx * 0.18;
-    this.knockVy += vy * 0.18;
   }
 
   _transitionPhase(idx) {
-    this.currentPhaseIndex      = idx;
-    this.phase                  = this.def.phases[idx].pattern;
-    this.attackCooldown         = this.def.phases[idx].cooldown;
-    this.phaseTransitioning     = true;
-    this.phaseTransitionTimer   = this.PHASE_TRANSITION_MS;
-    if (window.Particles) Particles.bossPhaseTransition(this.cx, this.cy);
-    if (window.__activeCamera) {
-      window.__activeCamera.hitStop(300);
-      window.__activeCamera.shake(14, 600, 'heavy');
-    }
-    if (window.AudioManager) window.__audio?.playSfx('boss_phase');
+    this.currentPhaseIndex = idx;
+    this.phase = this.def.phases[idx].pattern;
+    this.phaseTransitioning = true;
+    this.phaseTransitionTimer = 1000;
+    Particles.bossPhaseTransition(this.cx, this.cy);
   }
 
-  update(dt, player, map, combat, enemyManager) {
-    if (this.dead) { this.deathTimer += dt; return; }
-
-    // Ambient arena particles
-    this.ambientTimer += dt;
-    if (this.ambientTimer > 400) {
-      this.ambientTimer = 0;
-      if (window.Particles) {
-        Particles.torchFlicker(this.cx + (Math.random()-0.5)*80, this.cy + (Math.random()-0.5)*80);
-      }
+  update(dt, map, player, combat, enemyManager) {
+    if (this.defeated) {
+      this.defeatTimer += dt;
+      return;
     }
 
     if (this.state === 'intro') {
@@ -176,254 +161,241 @@ class Boss {
 
     if (this.hurtTimer > 0) this.hurtTimer -= dt;
 
-    // Knockback decay
-    if (Math.abs(this.knockVx)>0.1||Math.abs(this.knockVy)>0.1) {
-      this.x += this.knockVx; this.y += this.knockVy;
-      this.knockVx *= 0.8; this.knockVy *= 0.8;
-    }
-
     if (this.phaseTransitioning) {
       this.phaseTransitionTimer -= dt;
       if (this.phaseTransitionTimer <= 0) this.phaseTransitioning = false;
       return;
     }
 
+    if (this.staggerTimer > 0) {
+      this.staggerTimer -= dt;
+      return;
+    }
+
     this._updateFacing(player.cx, player.cy);
-    this._runPattern(dt, player, combat, enemyManager, map);
+    this._runPattern(dt, map, player, combat, enemyManager);
   }
 
   _updateFacing(tx, ty) {
-    const dx=tx-this.cx, dy=ty-this.cy;
-    if (Math.abs(dx)>Math.abs(dy)) this.facing=dx>0?'right':'left';
-    else this.facing=dy>0?'down':'up';
+    const dx = tx - this.cx, dy = ty - this.cy;
+    if (Math.abs(dx) > Math.abs(dy)) this.facing = dx > 0 ? 'right' : 'left';
+    else this.facing = dy > 0 ? 'down' : 'up';
   }
 
-  _runPattern(dt, player, combat, enemyManager, map) {
+  _runPattern(dt, map, player, combat, enemyManager) {
     this.attackTimer -= dt;
 
-    // Move toward player if not winding up
     if (!this.isWindingUp) {
-      const dist=Math.hypot(player.cx-this.cx, player.cy-this.cy);
-      if (dist > 80) {
-        const dx=(player.cx-this.cx)/dist, dy=(player.cy-this.cy)/dist;
-        this.x += dx*this.speed; this.y += dy*this.speed;
+      const dist = Math.hypot(player.cx - this.cx, player.cy - this.cy);
+      if (dist > 70) {
+        const dx = (player.cx - this.cx) / dist;
+        const dy = (player.cy - this.cy) / dist;
+        this.x += dx * this.speed;
+        this.y += dy * this.speed;
       }
     }
 
     if (this.attackTimer <= 0 && !this.isWindingUp) {
-      this._beginWindup();
+      this._beginAttack(player);
     }
 
     if (this.isWindingUp) {
       this.windupTimer -= dt;
       if (this.windupTimer <= 0) {
         this._executeAttack(player, combat, enemyManager);
-        this.isWindingUp  = false;
-        this.attackTimer  = this.attackCooldown;
+        this.isWindingUp = false;
+        this.attackTimer = this.attackCooldown;
       }
     }
   }
 
-  _beginWindup() {
+  _beginAttack(player) {
     this.isWindingUp = true;
-    const windups = {
-      sweep:       700,  pillars:    900,  emerge:     600,
-      charge:      500,  berserk:    300,  sword:      500,
-      summon:      900,  rune_reveal:700,  flame:      700,
-      stone:       600,  shadow:     500,  blood:      1000,
-      orbs:        700,  fracture:   600,  absorb:     1100,
-      desperation: 350,  final:      1300
-    };
-    this.windupTimer  = windups[this.phase] || 600;
-    this.currentAttack= this.phase;
+
+    switch (this.phase) {
+      case 'sweep':        this.windupTimer = 700;  this.currentAttack = 'melee_sweep'; break;
+      case 'pillars':      this.windupTimer = 900;  this.currentAttack = 'fire_pillars'; break;
+      case 'emerge':       this.windupTimer = 600;  this.currentAttack = 'melee_sweep'; break;
+      case 'charge':       this.windupTimer = 500;  this.currentAttack = 'charge'; break;
+      case 'berserk':      this.windupTimer = 300;  this.currentAttack = 'rapid_melee'; break;
+      case 'sword':        this.windupTimer = 500;  this.currentAttack = 'melee_sweep'; break;
+      case 'summon':       this.windupTimer = 800;  this.currentAttack = 'summon_knights'; break;
+      case 'rune_reveal':  this.windupTimer = 700;  this.currentAttack = 'rune_burst'; break;
+      case 'flame':        this.windupTimer = 700;  this.currentAttack = 'fire_pillars'; break;
+      case 'stone':        this.windupTimer = 600;  this.currentAttack = 'charge'; break;
+      case 'shadow':       this.windupTimer = 500;  this.currentAttack = 'rapid_melee'; break;
+      case 'blood':        this.windupTimer = 900;  this.currentAttack = 'blood_wave'; break;
+      case 'orbs':         this.windupTimer = 700;  this.currentAttack = 'orb_barrage'; break;
+      case 'fracture':     this.windupTimer = 600;  this.currentAttack = 'charge'; break;
+      case 'absorb':       this.windupTimer = 1000; this.currentAttack = 'absorb_hp'; break;
+      case 'desperation':  this.windupTimer = 400;  this.currentAttack = 'rapid_melee'; break;
+      case 'final':        this.windupTimer = 1200; this.currentAttack = 'final_nova'; break;
+      default:             this.windupTimer = 600;  this.currentAttack = 'melee_sweep';
+    }
   }
 
   _executeAttack(player, combat, enemyManager) {
-    const dist = Math.hypot(player.cx-this.cx, player.cy-this.cy);
-    const cam  = window.__activeCamera;
+    const dist = Math.hypot(player.cx - this.cx, player.cy - this.cy);
 
-    switch(this.currentAttack) {
-      case 'sweep':
-      case 'emerge':
-      case 'sword':
-        if (dist < this.width*1.3) {
-          if (!combat.checkParry(player, this)) {
-            player.takeDamage(16, false, this.cx, this.cy);
-          }
+    switch (this.currentAttack) {
+      case 'melee_sweep':
+        if (dist < this.width * 1.2) {
+          player.takeDamage(14);
+          Particles.playerHurt(player.cx, player.cy);
         }
-        if (cam) { cam.hitStop(80); cam.shake(6,220,'normal'); }
-        if (window.Particles) Particles.bloodSplatter(this.cx,this.cy,1.2);
         break;
 
-      case 'pillars':
-      case 'flame':
-        for (let i=0;i<4;i++) {
-          const px=player.cx+(Math.random()-0.5)*220;
-          const py=player.cy+(Math.random()-0.5)*220;
+      case 'fire_pillars': {
+        for (let i = 0; i < 3; i++) {
+          const px = player.cx + (Math.random() - 0.5) * 200;
+          const py = player.cy + (Math.random() - 0.5) * 200;
           combat.activeEffects.push({
-            type:'hemorrhage',x:px,y:py,radius:44,
-            damage:10,life:700,tickTimer:0,tickRate:280,ownerId:'boss'
+            type: 'hemorrhage', x: px, y: py, radius: 40,
+            damage: 12, life: 600, tickTimer: 0, tickRate: 300, ownerId: 'boss'
           });
-          if (window.Particles) Particles.hemorrhage(px,py);
+          Particles.hemorrhage(px, py);
         }
-        if (cam) cam.shake(5,300,'normal');
-        break;
-
-      case 'charge':
-      case 'stone': {
-        const dx=player.cx-this.cx, dy=player.cy-this.cy;
-        const d=Math.hypot(dx,dy)||1;
-        this.x+=(dx/d)*70; this.y+=(dy/d)*70;
-        if (dist<this.width*1.5) {
-          if (!combat.checkParry(player,this)) {
-            player.takeDamage(22, false, this.cx, this.cy);
-          }
-        }
-        if (cam) { cam.hitStop(100); cam.shake(8,280,'heavy'); }
         break;
       }
 
-      case 'berserk':
-      case 'desperation':
-        if (dist<this.width*1.1) {
-          if (!combat.checkParry(player,this)) {
-            player.takeDamage(12, false, this.cx, this.cy);
-          }
+      case 'charge': {
+        const dx = (player.cx - this.cx), dy = (player.cy - this.cy);
+        const d = Math.hypot(dx, dy) || 1;
+        this.x += (dx/d) * 60;
+        this.y += (dy/d) * 60;
+        if (dist < this.width * 1.4) {
+          player.takeDamage(20);
+          Particles.playerHurt(player.cx, player.cy);
         }
-        this.attackCooldown = Math.max(600, this.attackCooldown-100);
+        break;
+      }
+
+      case 'rapid_melee':
+        if (dist < this.width * 1.1) {
+          player.takeDamage(10);
+          Particles.playerHurt(player.cx, player.cy);
+        }
+        this.attackCooldown = 700;
         break;
 
-      case 'summon':
+      case 'summon_knights':
         if (enemyManager) {
-          const tx=Math.floor(this.cx/Sprites.TILE_SIZE);
-          const ty=Math.floor(this.cy/Sprites.TILE_SIZE);
-          enemyManager.enemies.push(new Enemy('grunt',tx-2,ty));
-          enemyManager.enemies.push(new Enemy('grunt',tx+2,ty));
-          enemyManager.enemies.push(new Enemy('archer',tx,ty-2));
+          const tx = Math.floor(this.cx / Sprites.TILE_SIZE);
+          const ty = Math.floor(this.cy / Sprites.TILE_SIZE);
+          enemyManager.enemies.push(new Enemy('grunt', tx - 2, ty));
+          enemyManager.enemies.push(new Enemy('grunt', tx + 2, ty));
         }
-        if (window.Particles) Particles.bossPhaseTransition(this.cx,this.cy);
+        this.attackCooldown = 3500;
         break;
 
-      case 'rune_reveal':
-      case 'blood':
+      case 'rune_burst':
         combat.activeEffects.push({
-          type:'hemorrhage',x:this.cx,y:this.cy,radius:100,
-          damage:8,life:2000,tickTimer:0,tickRate:300,ownerId:'boss'
+          type: 'hemorrhage', x: this.cx, y: this.cy, radius: 90,
+          damage: 6, life: 1500, tickTimer: 0, tickRate: 300, ownerId: 'boss'
         });
-        if (window.Particles) Particles.deathMark(this.cx,this.cy);
-        if (cam) cam.shake(6,400,'normal');
+        Particles.deathMark(this.cx, this.cy);
         break;
 
-      case 'shadow':
+      case 'blood_wave':
         combat.projectiles.push(new Projectile({
-          x:this.cx,y:this.cy,
-          vx:(player.cx>this.cx?1:-1)*5, vy:0,
-          damage:18,width:20,height:90,
-          color:'#330010',glowColor:'#ff1133',
-          ownedByPlayer:false,piercing:true,isWave:true,life:1400
+          x: this.cx, y: this.cy,
+          vx: (player.cx > this.cx ? 1 : -1) * 6, vy: 0,
+          damage: 16, width: 20, height: 100,
+          color: '#8b1a24', glowColor: '#ff3347',
+          ownedByPlayer: false, piercing: true, isWave: true, life: 1200
         }));
         break;
 
-      case 'orbs':
-        for (let i=0;i<6;i++) {
-          const angle=(i/6)*Math.PI*2;
+      case 'orb_barrage':
+        for (let i = 0; i < 5; i++) {
+          const angle = (i / 5) * Math.PI * 2;
           combat.projectiles.push(new Projectile({
-            x:this.cx,y:this.cy,
-            vx:Math.cos(angle)*4.5, vy:Math.sin(angle)*4.5,
-            damage:14,width:14,height:14,
-            color:'#ff3347',glowColor:'#ff6070',
-            ownedByPlayer:false,life:2800
+            x: this.cx, y: this.cy,
+            vx: Math.cos(angle) * 4, vy: Math.sin(angle) * 4,
+            damage: 12, width: 14, height: 14,
+            color: '#ff3347', glowColor: '#ff6070',
+            ownedByPlayer: false, life: 2500
           }));
         }
-        if (cam) cam.shake(5,200,'normal');
         break;
 
-      case 'fracture': {
-        // 3 targeted blood bolts
-        const dx=player.cx-this.cx, dy=player.cy-this.cy;
-        const d=Math.hypot(dx,dy)||1;
-        [-0.3,0,0.3].forEach(offset=>{
-          const a=Math.atan2(dy,dx)+offset;
-          combat.projectiles.push(new Projectile({
-            x:this.cx,y:this.cy,
-            vx:Math.cos(a)*6,vy:Math.sin(a)*6,
-            damage:16,width:12,height:12,
-            color:'#cc0020',glowColor:'#ff3347',
-            ownedByPlayer:false,life:2200
-          }));
-        });
+      case 'absorb_hp': {
+        const drain = Math.min(15, player.hp - 1);
+        if (drain > 0) {
+          player.hp -= drain;
+          this.hp = Math.min(this.maxHp, this.hp + drain * 2);
+          Particles.deathMark(player.cx, player.cy);
+        }
         break;
       }
 
-      case 'absorb': {
-        const drain=Math.min(18,player.hp-1);
-        if (drain>0) {
-          player.takeDamage(drain, true);
-          this.hp=Math.min(this.maxHp,this.hp+drain*2);
-          if (window.Particles) Particles.deathMark(player.cx,player.cy);
-        }
-        if (cam) { cam.hitStop(120); cam.shake(10,400,'heavy'); }
-        break;
-      }
-
-      case 'final':
-        for (let i=0;i<14;i++) {
-          const angle=(i/14)*Math.PI*2;
+      case 'final_nova':
+        for (let i = 0; i < 12; i++) {
+          const angle = (i / 12) * Math.PI * 2;
           combat.projectiles.push(new Projectile({
-            x:this.cx,y:this.cy,
-            vx:Math.cos(angle)*5.5, vy:Math.sin(angle)*5.5,
-            damage:20,width:16,height:16,
-            color:'#ff6600',glowColor:'#ff3347',
-            ownedByPlayer:false,life:3000
+            x: this.cx, y: this.cy,
+            vx: Math.cos(angle) * 5, vy: Math.sin(angle) * 5,
+            damage: 18, width: 16, height: 16,
+            color: '#ff9900', glowColor: '#ff3347',
+            ownedByPlayer: false, life: 2500
           }));
         }
-        if (window.Particles) Particles.bossPhaseTransition(this.cx,this.cy);
-        if (cam) { cam.hitStop(200); cam.shake(18,800,'crit'); }
-        if (window.Achievements) window.Achievements.unlock('no_damage_boss');
+        Particles.bossPhaseTransition(this.cx, this.cy);
         break;
     }
   }
 
   render(ctx, camera) {
-    if (this.dead && this.deathTimer > 900) return;
+    if (this.defeated && this.defeatTimer > 800) return;
+
     ctx.save();
-    if (this.dead) ctx.globalAlpha=Math.max(0,1-this.deathTimer/900);
-    if (this.state==='intro') ctx.globalAlpha=Math.min(1,1-this.introTimer/1800);
-    if (this.hurtTimer>0 && Math.floor(this.hurtTimer/50)%2===0) {
-      ctx.filter='brightness(2) saturate(2)';
+    if (this.defeated) ctx.globalAlpha = Math.max(0, 1 - this.defeatTimer / 800);
+    if (this.hurtTimer > 0 && Math.floor(this.hurtTimer / 50) % 2 === 0) {
+      ctx.filter = 'brightness(2) saturate(2)';
     }
-    Sprites.drawBossSprite(ctx, this.type, this.x, this.y, this.width, this.isWindingUp);
-    ctx.restore();
+    if (this.state === 'intro') {
+      ctx.globalAlpha = Math.min(1, 1 - this.introTimer / 1500);
+    }
 
-    // Wind-up ring
+    if (window.Assets && window.Assets.hasImage('boss_' + this.type)) {
+      const img = window.Assets.getImage('boss_' + this.type);
+      const frameSize = 128;
+      const framesPerRow = Math.max(1, Math.floor(img.width / frameSize));
+      const frameIndex = Math.floor(Date.now() / 200) % framesPerRow;
+      ctx.shadowColor = this.color;
+      ctx.shadowBlur = this.isWindingUp ? 20 : 8;
+      ctx.drawImage(img, frameIndex * frameSize, 0, frameSize, frameSize, this.x, this.y, this.width, this.height);
+      ctx.shadowBlur = 0;
+    } else {
+      ctx.shadowColor = this.color;
+      ctx.shadowBlur = this.isWindingUp ? 24 : 12;
+      ctx.fillStyle = this.color;
+      ctx.fillRect(this.x, this.y, this.width, this.height);
+
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = 'rgba(0,0,0,.35)';
+      ctx.fillRect(this.x + this.width*0.1, this.y + this.height*0.1, this.width*0.8, this.height*0.3);
+
+      ctx.fillStyle = '#ffcc02';
+      ctx.shadowColor = '#ffcc02';
+      ctx.shadowBlur = 10;
+      const eyeY = this.y + this.height * 0.3;
+      ctx.fillRect(this.x + this.width*0.25, eyeY, this.width*0.12, this.height*0.1);
+      ctx.fillRect(this.x + this.width*0.63, eyeY, this.width*0.12, this.height*0.1);
+    }
+
     if (this.isWindingUp) {
-      const progress=1-this.windupTimer/(this.def.phases[this.currentPhaseIndex].cooldown||700);
-      ctx.save();
-      ctx.globalAlpha=0.5+progress*0.3;
-      ctx.strokeStyle='rgba(255,51,71,.8)';
-      ctx.lineWidth=3+progress*3;
-      ctx.shadowColor='#ff3347'; ctx.shadowBlur=14;
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = 'rgba(255,80,80,.6)';
+      ctx.lineWidth = 3;
       ctx.beginPath();
-      ctx.arc(this.cx,this.cy,this.width*0.95+progress*10,0,Math.PI*2);
+      ctx.arc(this.cx, this.cy, this.width * 0.9, 0, Math.PI * 2);
       ctx.stroke();
-      ctx.restore();
     }
 
-    // Phase transition flash overlay
-    if (this.phaseTransitioning) {
-      const progress=1-this.phaseTransitionTimer/this.PHASE_TRANSITION_MS;
-      ctx.save();
-      ctx.globalAlpha=(1-progress)*0.5;
-      ctx.fillStyle='#ff3347';
-      ctx.fillRect(this.x-20,this.y-20,this.width+40,this.height+40);
-      ctx.restore();
-    }
-  }
-
-  renderBossBar(ctx, canvasWidth) {
-    // Rendered by ui.js updateBossHp — this is a canvas fallback
+    ctx.restore();
   }
 }
 
 window.BOSS_DEFS = BOSS_DEFS;
-window.Boss      = Boss;
+window.Boss = Boss;

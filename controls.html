@@ -8,9 +8,7 @@
   <link rel="stylesheet" href="pages.css" />
 </head>
 <body class="page-body">
-
   <canvas id="bg-canvas"></canvas>
-
   <nav class="navbar" id="navbar">
     <div class="nav-logo" onclick="window.location.href='index.html'" style="cursor:pointer">
       <span class="logo-drop">⬡</span><span class="logo-text">BLOODBOUND</span>
@@ -23,138 +21,107 @@
       <li><a href="controls.html" class="active">Controls</a></li>
       <li><a href="progression.html">Progression</a></li>
       <li><a href="about.html">About</a></li>
+      <li><a href="feedback.html">Feedback</a></li>
+      <li><a href="auth.html">Account</a></li>
     </ul>
     <button class="nav-play-btn" onclick="window.location.href='game.html'"><span>PLAY NOW</span></button>
     <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
   </nav>
   <div class="mobile-drawer" id="mobile-drawer">
     <ul>
-      <li><a href="index.html">Home</a></li><li><a href="game.html">Play</a></li>
-      <li><a href="abilities.html">Abilities</a></li><li><a href="shop.html">Shop</a></li>
-      <li><a href="controls.html">Controls</a></li><li><a href="progression.html">Progression</a></li>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="game.html">Play</a></li>
+      <li><a href="abilities.html">Abilities</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="controls.html">Controls</a></li>
+      <li><a href="progression.html">Progression</a></li>
       <li><a href="about.html">About</a></li>
+      <li><a href="feedback.html">Feedback</a></li>
+      <li><a href="auth.html">Account</a></li>
     </ul>
   </div>
 
   <header class="page-hero">
     <div class="page-hero-eyebrow">— HOW TO PLAY —</div>
     <h1 class="page-hero-title">Controls</h1>
-    <p class="page-hero-desc">Master these controls and you master the blood rune. Bloodbound is designed to be intuitive — dangerous to learn, impossible to forget.</p>
+    <p class="page-hero-desc">Master the blood rune. Learn the controls and become unstoppable.</p>
   </header>
 
-  <main class="page-main controls-main">
+  <main class="page-main">
 
-    <!-- KEYBOARD LAYOUT VISUAL -->
-    <section class="controls-section">
-      <h2 class="controls-section-title">⌨️ Keyboard Layout</h2>
-      <div class="keyboard-visual">
-        <div class="key-group movement">
-          <div class="key-row">
-            <div class="key-cap tall" data-action="Move Up">W<br/><span>↑</span></div>
-          </div>
-          <div class="key-row">
-            <div class="key-cap" data-action="Move Left">A<br/><span>←</span></div>
-            <div class="key-cap" data-action="Move Down">S<br/><span>↓</span></div>
-            <div class="key-cap" data-action="Move Right">D<br/><span>→</span></div>
-          </div>
-          <p class="key-group-label">Movement</p>
-        </div>
-        <div class="key-group actions">
-          <div class="key-row">
-            <div class="key-cap wide" data-action="Basic Attack">SPACE</div>
-          </div>
-          <div class="key-row">
-            <div class="key-cap" data-action="Ability 1">1</div>
-            <div class="key-cap" data-action="Ability 2">2</div>
-            <div class="key-cap" data-action="Ability 3">3</div>
-            <div class="key-cap" data-action="Ability 4">4</div>
-          </div>
-          <div class="key-row">
-            <div class="key-cap" data-action="Interact / Confirm">E</div>
-            <div class="key-cap" data-action="Use Potion">Q</div>
-            <div class="key-cap" data-action="Pause">ESC</div>
-          </div>
-          <p class="key-group-label">Actions</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- FULL CONTROLS TABLE -->
-    <section class="controls-section">
-      <h2 class="controls-section-title">📋 Full Controls Reference</h2>
+    <div class="page-section">
+      <h2 class="page-section-title">Keyboard & Mouse</h2>
       <div class="controls-table-wrap">
         <table class="controls-table">
-          <thead>
-            <tr><th>Action</th><th>Primary Key</th><th>Alt Key</th><th>Description</th></tr>
-          </thead>
+          <thead><tr><th>Action</th><th>Key / Input</th><th>Notes</th></tr></thead>
           <tbody>
-            <tr class="row-category"><td colspan="4">🏃 Movement</td></tr>
-            <tr><td>Move Up</td><td><kbd>W</kbd></td><td><kbd>↑</kbd></td><td>Move player upward on the map</td></tr>
-            <tr><td>Move Down</td><td><kbd>S</kbd></td><td><kbd>↓</kbd></td><td>Move player downward on the map</td></tr>
-            <tr><td>Move Left</td><td><kbd>A</kbd></td><td><kbd>←</kbd></td><td>Move player left on the map</td></tr>
-            <tr><td>Move Right</td><td><kbd>D</kbd></td><td><kbd>→</kbd></td><td>Move player right on the map</td></tr>
-
-            <tr class="row-category"><td colspan="4">⚔️ Combat</td></tr>
-            <tr><td>Basic Attack</td><td><kbd>Space</kbd></td><td>—</td><td>Swing your weapon in the direction you're facing. Free — no HP cost.</td></tr>
-            <tr><td>Blood Ability 1</td><td><kbd>1</kbd></td><td>—</td><td>Activate ability in slot 1 (Blood Surge by default). Costs HP.</td></tr>
-            <tr><td>Blood Ability 2</td><td><kbd>2</kbd></td><td>—</td><td>Activate ability in slot 2 (Crimson Whirl by default). Costs HP.</td></tr>
-            <tr><td>Blood Ability 3</td><td><kbd>3</kbd></td><td>—</td><td>Activate ability in slot 3. Locked until unlocked in shop or story.</td></tr>
-            <tr><td>Blood Ability 4</td><td><kbd>4</kbd></td><td>—</td><td>Activate ability in slot 4. Locked until unlocked in shop or story.</td></tr>
-
-            <tr class="row-category"><td colspan="4">🎒 Items & Interaction</td></tr>
-            <tr><td>Use Potion</td><td><kbd>Q</kbd></td><td>—</td><td>Instantly consume a blood potion from your inventory. Restores HP.</td></tr>
-            <tr><td>Interact</td><td><kbd>E</kbd></td><td>—</td><td>Talk to NPCs, open chests, read signs, activate switches.</td></tr>
-            <tr><td>Advance Dialogue</td><td><kbd>E</kbd></td><td><kbd>Space</kbd></td><td>Advance through cutscene dialogue boxes.</td></tr>
-
-            <tr class="row-category"><td colspan="4">📋 Menus</td></tr>
-            <tr><td>Pause</td><td><kbd>ESC</kbd></td><td>—</td><td>Open the pause menu. Access settings, save, and quit.</td></tr>
-            <tr><td>Close Menu</td><td><kbd>ESC</kbd></td><td>—</td><td>Close any open overlay or menu.</td></tr>
+            <tr><td>Move</td><td><kbd>W A S D</kbd> or <kbd>↑ ↓ ← →</kbd></td><td>8-directional movement</td></tr>
+            <tr><td>Fire Blood Bolt</td><td><kbd>Left Click</kbd> or <kbd>Tap</kbd></td><td>Long-range attack toward cursor</td></tr>
+            <tr><td>Parry</td><td><kbd>Right Click</kbd></td><td>180ms window — staggers attacker on success</td></tr>
+            <tr><td>Dodge Roll</td><td><kbd>Shift</kbd></td><td>Full i-frames, rolls toward movement direction</td></tr>
+            <tr><td>Ability Slot 1</td><td><kbd>1</kbd></td><td>Blood Surge (default)</td></tr>
+            <tr><td>Ability Slot 2</td><td><kbd>2</kbd></td><td>Crimson Whirl (default)</td></tr>
+            <tr><td>Ability Slot 3</td><td><kbd>3</kbd></td><td>Unlocked via shop or progression</td></tr>
+            <tr><td>Ability Slot 4</td><td><kbd>4</kbd></td><td>Unlocked via shop or progression</td></tr>
+            <tr><td>Use Potion</td><td><kbd>Q</kbd></td><td>Uses large potion first, then small</td></tr>
+            <tr><td>Interact</td><td><kbd>E</kbd></td><td>Open chests, doors, dialogue</td></tr>
+            <tr><td>Pause</td><td><kbd>Esc</kbd></td><td>Opens pause menu</td></tr>
+            <tr><td>Skip Dialogue</td><td><kbd>E</kbd> or <kbd>Space</kbd></td><td>Advance cutscene text</td></tr>
           </tbody>
         </table>
       </div>
-    </section>
+    </div>
 
-    <!-- COMBAT TIPS -->
-    <section class="controls-section">
-      <h2 class="controls-section-title">⚔️ Combat Tips</h2>
+    <div class="page-section">
+      <h2 class="page-section-title">Combat Tips</h2>
       <div class="tips-grid">
         <div class="tip-card">
           <div class="tip-icon">🩸</div>
-          <h3>Watch Your HP</h3>
-          <p>Blood abilities drain your HP. At 10 HP or below, you cannot use any ability that costs more than your remaining health. Plan your casts carefully.</p>
+          <h3>Aim with your mouse</h3>
+          <p>Blood bolts and directional abilities all fire toward your cursor. Keep your mouse pointed at enemies for maximum effectiveness.</p>
         </div>
         <div class="tip-card">
-          <div class="tip-icon">🎯</div>
-          <h3>Facing Direction</h3>
-          <p>Basic attacks and most abilities fire in the direction your player is facing (last movement direction). Position yourself before unleashing an ability.</p>
+          <div class="tip-icon">🛡️</div>
+          <h3>Parry timing</h3>
+          <p>Right-click just before an enemy strikes — a gold ring appears when the window is active. A successful parry stuns the attacker for nearly a second.</p>
         </div>
         <div class="tip-card">
-          <div class="tip-icon">🔄</div>
-          <h3>Cooldowns</h3>
-          <p>Each blood ability has a cooldown shown in the HUD. Basic attacks have no cooldown — spam them freely while waiting for abilities to reset.</p>
+          <div class="tip-icon">💨</div>
+          <h3>Roll through attacks</h3>
+          <p>You have full invincibility frames during the entire dodge roll. Roll through projectiles, boss swings, and AoE attacks safely.</p>
         </div>
         <div class="tip-card">
-          <div class="tip-icon">💊</div>
-          <h3>Potions</h3>
-          <p>Don't hoard potions. The Q key instantly uses one. In boss fights, potion timing can be the difference between a win and a retry.</p>
+          <div class="tip-icon">💔</div>
+          <h3>Manage your HP resource</h3>
+          <p>Abilities cost HP. Keep at least enough HP to cast your most important ability. The rune prevents self-kill but running dry means no abilities.</p>
         </div>
         <div class="tip-card">
-          <div class="tip-icon">👁</div>
-          <h3>Boss Patterns</h3>
-          <p>Every boss telegraphs their attacks with a brief animation. Learn the wind-up animation and move out of the attack path before it lands.</p>
+          <div class="tip-icon">💀</div>
+          <h3>Use Death Mark on bosses</h3>
+          <p>Apply Death Mark first, then use your heaviest abilities. 3× damage multiplier turns a 300-damage Sanguine Sacrifice into 900 damage.</p>
         </div>
         <div class="tip-card">
-          <div class="tip-icon">🏃</div>
-          <h3>Don't Stand Still</h3>
-          <p>Enemies and bosses target your position. Keep moving, especially in Phase 2 and Phase 3 boss fights where attacks become faster and more unpredictable.</p>
+          <div class="tip-icon">🌊</div>
+          <h3>Save Blood Tide for crowds</h3>
+          <p>Blood Tide pierces every enemy in a line. Save it for when multiple enemies are lined up, or fire it diagonally across the whole arena.</p>
         </div>
       </div>
-    </section>
+    </div>
+
+    <div class="page-section">
+      <h2 class="page-section-title">HUD Guide</h2>
+      <div class="hud-guide-grid">
+        <div class="hud-item"><div class="hud-item-icon">❤️</div><div><h3>HP Bar</h3><p>Red bar = current HP. Yellow lag bar = recent damage (Elden Ring style drain). Low HP pulses a red vignette on screen.</p></div></div>
+        <div class="hud-item"><div class="hud-item-icon">🩸</div><div><h3>Blood Coins</h3><p>Earned by defeating enemies. Spend at the shop between runs. Persists across sessions when signed in.</p></div></div>
+        <div class="hud-item"><div class="hud-item-icon">⚡</div><div><h3>Ability Slots</h3><p>Shows cooldown as a fill overlay. Grey = on cooldown, full colour = ready. Dim = not enough HP to cast.</p></div></div>
+        <div class="hud-item"><div class="hud-item-icon">🗺️</div><div><h3>Minimap</h3><p>Bottom-right corner. Red dot = your position. White dots = chests. Darker tiles = walls.</p></div></div>
+      </div>
+    </div>
 
   </main>
 
   <div class="page-return">
-    <button class="btn-primary" onclick="window.location.href='game.html'">▶ Return to Game</button>
+    <button class="btn-primary" onclick="window.location.href='game.html'">▶ Play Bloodbound</button>
   </div>
 
   <footer class="footer">
@@ -164,10 +131,12 @@
       <a href="abilities.html">Abilities</a><a href="shop.html">Shop</a>
       <a href="controls.html">Controls</a><a href="progression.html">Progression</a>
       <a href="about.html">About</a>
+      <a href="feedback.html">Feedback</a><a href="auth.html">Account</a>
     </div>
     <div class="footer-credits"><p>Created by Bentley J.B. & Koushik M. — ICD20 — Mr. McRae — May 2026</p></div>
   </footer>
 
+  <script src="storage.js"></script>
   <script src="pages.js"></script>
 </body>
 </html>

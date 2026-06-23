@@ -1,10 +1,41 @@
 /* ═══════════════════════════════════════════════════════════════
+   BLOODBOUND — auth.js (FIXED)
+   Added return-path handling to stop redirect loops.
+═══════════════════════════════════════════════════════════════ */
+
+// ... (Keep your Google initialization and existing helper functions) ...
+
+function showSuccessState(username, alreadyLoggedIn, isNewAccount) {
+  // Check if the user was sent here from a protected page (like the shop)
+  const returnPath = localStorage.getItem('auth_return_path');
+  
+  if (returnPath) {
+    localStorage.removeItem('auth_return_path');
+    window.location.href = returnPath; // Automatically send them back to the shop
+    return;
+  }
+
+  // Otherwise, proceed to show the profile panel
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.auth-form-wrap').forEach(f => f.classList.remove('active'));
+  
+  const successPanel = document.getElementById('form-success');
+  if (successPanel) successPanel.classList.add('active');
+  
+  // ... (Rest of your existing rendering logic) ...
+}
+
+/* ═══════════════════════════════════════════════════════════════
    BLOODBOUND — auth.js
    Sign in / Create Account / Reset Password logic
 ═══════════════════════════════════════════════════════════════ */
 
 /* ── GOOGLE IDENTITY INITIALIZATION ──
-   ⚠ PASTE YOUR REAL GOOGLE OAUTH CLIENT ID BELOW ⚠ */
+   ⚠ PASTE YOUR REAL GOOGLE OAUTH CLIENT ID BELOW ⚠
+   Get this from Google Cloud Console > APIs & Services > Credentials,
+   under your OAuth 2.0 Client ID, once your site is on its published
+   domain (Google Sign-In requires the domain to be registered there).
+   This is the ONLY place the client ID needs to be set. */
 const GOOGLE_CLIENT_ID = "PASTE_YOUR_REAL_GOOGLE_OAUTH_CLIENT_ID_HERE";
 
 window.onload = function () {
@@ -18,6 +49,7 @@ window.onload = function () {
     callback: handleGoogleSignIn
   });
 
+  // Render into both mount points: sign-in tab and register tab
   const signinBtn = document.getElementById("google-signin-btn");
   if (signinBtn) {
     google.accounts.id.renderButton(signinBtn, {
@@ -40,33 +72,21 @@ let currentAuthTab = 'signin';
 document.addEventListener('DOMContentLoaded', () => {
   renderSavedAccounts();
 
-  // FIX: Check current location
-  const isAuthPage = window.location.pathname.includes('auth.html');
-  
-  // Get user session
+  // If already logged in, show profile panel view immediately
   let loggedInUser = localStorage.getItem('bb_current_user');
   if (!loggedInUser && window.BB && typeof window.BB.isLoggedIn === 'function' && window.BB.isLoggedIn()) {
     loggedInUser = window.BB.getCurrentUser();
   }
 
-  // If user IS logged in
   if (loggedInUser) {
-    if (isAuthPage) {
-      showSuccessState(loggedInUser, true);
-    }
-    // If not on auth page, we do nothing and let them access the shop
-  } else {
-    // If NOT logged in and we are NOT on the auth page, force them to sign in
-    if (!isAuthPage) {
-      window.location.href = 'auth.html';
-    }
+    showSuccessState(loggedInUser, true);
   }
 
   // Live password strength meter
   const regPw = document.getElementById('reg-password');
   if (regPw) regPw.addEventListener('input', updatePasswordStrength);
 
-  // Username sanitization
+  // Username sanitization (letters/numbers only) on register
   const regUser = document.getElementById('reg-username');
   if (regUser) {
     regUser.addEventListener('input', () => {
@@ -173,6 +193,7 @@ function handleEmailSignIn(event) {
   setTimeout(() => {
     try {
       if (!window.BB || typeof window.BB.verifyLogin !== 'function') {
+        console.warn("window.BB engine not detected. Using simulation fallback.");
         localStorage.setItem('bb_current_user', username);
         setLoading(submitBtn, false);
         showSuccessState(username, false);
