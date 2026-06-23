@@ -136,9 +136,8 @@ function injectAuthNavLink() {
   const isLoggedIn = window.BB.isLoggedIn();
   const username = window.BB.getCurrentUser();
 
-  // Determine relative path prefix (pages/ subfolder vs root)
-  const inPagesDir = window.location.pathname.includes('/pages/');
-  const prefix = inPagesDir ? '../' : '';
+  // Flat file structure — every file is a sibling, no path prefix needed
+  const prefix = '';
 
   const li = document.createElement('li');
   li.className = 'nav-auth-item';

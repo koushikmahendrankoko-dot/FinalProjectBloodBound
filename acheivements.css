@@ -1,0 +1,142 @@
+/* ═══════════════════════════════════════════════════════════════
+   BLOODBOUND — achievements.css
+═══════════════════════════════════════════════════════════════ */
+
+/* Progress bar */
+.ach-progress-wrap {
+  margin-top: clamp(20px,2.5vw,32px);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.ach-progress-bar-track {
+  width: min(480px, 80vw); height: 10px;
+  background: var(--blood-surface); border: 1px solid var(--blood-border);
+  border-radius: var(--radius-pill); overflow: hidden;
+}
+.ach-progress-bar-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--blood-core), var(--blood-vivid), var(--blood-ember, #ff9900));
+  border-radius: var(--radius-pill);
+  box-shadow: 0 0 12px rgba(255,51,71,.5);
+  transition: width 1s cubic-bezier(.2,.8,.2,1);
+}
+.ach-progress-labels {
+  display: flex; justify-content: space-between;
+  width: min(480px, 80vw);
+  font-family: var(--font-heading); font-size: .78rem; color: var(--text-muted);
+}
+.ach-tier-summary {
+  display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+}
+.ach-tier-chip {
+  padding: 4px 14px; border-radius: var(--radius-pill);
+  font-family: var(--font-heading); font-size: .75rem; font-weight: 700;
+  letter-spacing: .06em;
+}
+.ach-tier-chip.gold   { background: rgba(255,204,2,.12);  border:1px solid rgba(255,204,2,.4);  color:#ffcc02; }
+.ach-tier-chip.silver { background: rgba(160,176,192,.1); border:1px solid rgba(160,176,192,.3);color:#a0b0c0; }
+.ach-tier-chip.bronze { background: rgba(180,100,40,.12); border:1px solid rgba(180,100,40,.35);color:#c87040; }
+
+/* Filter row */
+.ach-filter-row {
+  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+  padding: 24px clamp(20px,5vw,60px) 0;
+}
+.ach-filter-btn {
+  padding: 8px 18px; border-radius: var(--radius-pill);
+  border: 1px solid var(--blood-border); background: var(--blood-surface);
+  color: var(--text-muted); font-family: var(--font-heading);
+  font-size: .78rem; letter-spacing: .04em; transition: all var(--t-fast);
+}
+.ach-filter-btn:hover { border-color: var(--blood-muted); color: var(--text-primary); }
+.ach-filter-btn.active {
+  background: linear-gradient(135deg, var(--blood-core), var(--blood-bright));
+  border-color: var(--blood-bright); color: var(--text-primary);
+  box-shadow: var(--shadow-glow-sm);
+}
+
+/* Achievement grid */
+.ach-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+  gap: clamp(14px,1.8vw,20px);
+}
+
+.ach-empty {
+  grid-column: 1/-1; text-align: center; padding: 48px;
+  color: var(--text-muted); display: flex; flex-direction: column;
+  align-items: center; gap: 10px;
+}
+.ach-empty span { font-size: 2.5rem; opacity: .4; }
+
+/* Achievement card */
+.ach-card {
+  position: relative;
+  display: flex; align-items: center; gap: 16px;
+  padding: clamp(16px,2vw,22px);
+  background: linear-gradient(160deg, var(--blood-surface), var(--blood-dark));
+  border: 1px solid var(--blood-border);
+  border-radius: var(--radius-lg);
+  transition: transform var(--t-med), border-color var(--t-med), box-shadow var(--t-med);
+  animation: card-rise-in .5s cubic-bezier(.2,.8,.2,1) both;
+  overflow: hidden;
+}
+.ach-card::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.03), transparent);
+  pointer-events: none;
+}
+.ach-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,.5);
+}
+
+/* Unlocked */
+.ach-card.unlocked { border-color: var(--blood-muted); }
+.ach-card.unlocked.tier-gold   { border-color: rgba(255,204,2,.5);  box-shadow: 0 0 20px rgba(255,204,2,.08); }
+.ach-card.unlocked.tier-silver { border-color: rgba(160,176,192,.4);}
+.ach-card.unlocked.tier-bronze { border-color: rgba(180,100,40,.4); }
+.ach-card.unlocked:hover.tier-gold   { box-shadow: 0 12px 40px rgba(0,0,0,.5), 0 0 30px rgba(255,204,2,.15); }
+
+/* Locked */
+.ach-card.locked { opacity: .5; filter: grayscale(.6); }
+.ach-card.locked:hover { opacity: .7; }
+
+.ach-icon {
+  font-size: clamp(1.8rem,2.5vw,2.4rem); flex-shrink: 0;
+  width: 52px; height: 52px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--blood-raised); border-radius: var(--radius-md);
+  border: 1px solid var(--blood-border);
+}
+.ach-card.unlocked .ach-icon {
+  background: radial-gradient(circle, rgba(180,32,48,.15), transparent);
+}
+
+.ach-info { flex: 1; min-width: 0; }
+.ach-title {
+  font-family: var(--font-heading); font-size: .95rem; font-weight: 700;
+  color: var(--text-primary); margin-bottom: 4px;
+}
+.ach-desc {
+  font-size: .78rem; color: var(--text-secondary); line-height: 1.5;
+}
+.ach-date {
+  margin-top: 6px; font-size: .68rem; color: var(--blood-muted);
+  font-family: var(--font-heading); letter-spacing: .04em;
+}
+
+.ach-tier-badge {
+  font-size: 1.1rem; flex-shrink: 0;
+}
+
+.ach-check {
+  position: absolute; top: 10px; right: 10px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--blood-core);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .65rem; color: white; font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .ach-grid { grid-template-columns: 1fr; }
+}

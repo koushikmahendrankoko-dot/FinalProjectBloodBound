@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bloodbound — Achievements</title>
+  <link rel="stylesheet" href="global.css" />
+  <link rel="stylesheet" href="pages.css" />
+  <link rel="stylesheet" href="achievements.css" />
+</head>
+<body class="page-body">
+  <canvas id="bg-canvas"></canvas>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-logo" onclick="window.location.href='index.html'" style="cursor:pointer">
+      <span class="logo-drop">⬡</span><span class="logo-text">BLOODBOUND</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="game.html">Play</a></li>
+      <li><a href="abilities.html">Abilities</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="controls.html">Controls</a></li>
+      <li><a href="progression.html">Progression</a></li>
+      <li><a href="achievements.html" class="active">Achievements</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <button class="nav-play-btn" onclick="window.location.href='game.html'"><span>PLAY NOW</span></button>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="mobile-drawer" id="mobile-drawer">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="game.html">Play</a></li>
+      <li><a href="abilities.html">Abilities</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="controls.html">Controls</a></li>
+      <li><a href="progression.html">Progression</a></li>
+      <li><a href="achievements.html">Achievements</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </div>
+
+  <header class="page-hero">
+    <div class="page-hero-eyebrow">— BLOOD HONOURS —</div>
+    <h1 class="page-hero-title">Achievements</h1>
+    <p class="page-hero-desc">Every sacrifice remembered. Every victory carved in blood.</p>
+
+    <!-- Progress bar -->
+    <div class="ach-progress-wrap">
+      <div class="ach-progress-bar-track">
+        <div class="ach-progress-bar-fill" id="ach-progress-fill"></div>
+      </div>
+      <div class="ach-progress-labels">
+        <span id="ach-count-label">0 / 0 Unlocked</span>
+        <span id="ach-pct-label">0%</span>
+      </div>
+      <div class="ach-tier-summary">
+        <span class="ach-tier-chip gold">🏆 <span id="gold-count">0</span> Gold</span>
+        <span class="ach-tier-chip silver">🥈 <span id="silver-count">0</span> Silver</span>
+        <span class="ach-tier-chip bronze">🥉 <span id="bronze-count">0</span> Bronze</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Filter tabs -->
+  <div class="ach-filter-row">
+    <button class="ach-filter-btn active" data-filter="all">All</button>
+    <button class="ach-filter-btn" data-filter="unlocked">Unlocked</button>
+    <button class="ach-filter-btn" data-filter="locked">Locked</button>
+    <button class="ach-filter-btn" data-filter="gold">🏆 Gold</button>
+    <button class="ach-filter-btn" data-filter="silver">🥈 Silver</button>
+    <button class="ach-filter-btn" data-filter="bronze">🥉 Bronze</button>
+  </div>
+
+  <main class="page-main">
+    <div class="ach-grid" id="ach-grid">
+      <!-- Populated by JS -->
+    </div>
+  </main>
+
+  <div class="page-return">
+    <button class="btn-primary" onclick="window.location.href='game.html'">▶ Return to Game</button>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-logo"><span class="logo-drop">⬡</span> BLOODBOUND</div>
+    <div class="footer-links">
+      <a href="index.html">Home</a><a href="game.html">Play</a>
+      <a href="abilities.html">Abilities</a><a href="shop.html">Shop</a>
+      <a href="achievements.html">Achievements</a><a href="about.html">About</a>
+    </div>
+    <div class="footer-credits"><p>Created by Bentley J.B. & Koushik M. — ICD20 — Mr. McRae — May 2026</p></div>
+  </footer>
+
+  <script src="storage.js"></script>
+  <script src="achievements.js"></script>
+  <script src="pages.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const mgr  = window.Achievements;
+      const all  = mgr.getAllProgress();
+      const stats= mgr.getStats();
+
+      // Header stats
+      document.getElementById('ach-progress-fill').style.width = stats.pct + '%';
+      document.getElementById('ach-count-label').textContent   = `${stats.unlocked} / ${stats.total} Unlocked`;
+      document.getElementById('ach-pct-label').textContent     = stats.pct + '%';
+      document.getElementById('gold-count').textContent        = stats.gold;
+      document.getElementById('silver-count').textContent      = stats.silver;
+      document.getElementById('bronze-count').textContent      = stats.bronze;
+
+      // Filter buttons
+      let activeFilter = 'all';
+      document.querySelectorAll('.ach-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.ach-filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          activeFilter = btn.dataset.filter;
+          renderGrid(activeFilter);
+        });
+      });
+
+      function renderGrid(filter) {
+        const grid = document.getElementById('ach-grid');
+        let items = all;
+        if (filter === 'unlocked') items = all.filter(a => a.unlocked);
+        else if (filter === 'locked')   items = all.filter(a => !a.unlocked);
+        else if (['gold','silver','bronze'].includes(filter)) items = all.filter(a => a.tier === filter);
+
+        if (items.length === 0) {
+          grid.innerHTML = `<div class="ach-empty"><span>🩸</span><p>No achievements here yet.</p></div>`;
+          return;
+        }
+
+        grid.innerHTML = items.map((a, i) => {
+          const isSecret = a.secret && !a.unlocked;
+          const unlockedDate = a.unlockedAt
+            ? new Date(a.unlockedAt).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'})
+            : null;
+          return `
+            <div class="ach-card ${a.unlocked?'unlocked':'locked'} tier-${a.tier}"
+                 style="animation-delay:${i*0.04}s">
+              <div class="ach-icon">${isSecret ? '❓' : a.icon}</div>
+              <div class="ach-info">
+                <div class="ach-title">${isSecret ? '???' : a.title}</div>
+                <div class="ach-desc">${isSecret ? 'Keep playing to discover this achievement.' : a.desc}</div>
+                ${unlockedDate ? `<div class="ach-date">Unlocked ${unlockedDate}</div>` : ''}
+              </div>
+              <div class="ach-tier-badge tier-${a.tier}">
+                ${a.tier === 'gold' ? '🏆' : a.tier === 'silver' ? '🥈' : '🥉'}
+              </div>
+              ${a.unlocked ? '<div class="ach-check">✓</div>' : ''}
+            </div>
+          `;
+        }).join('');
+      }
+
+      renderGrid('all');
+    });
+  </script>
+</body>
+</html>

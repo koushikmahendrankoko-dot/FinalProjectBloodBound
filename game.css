@@ -934,3 +934,68 @@
   transition: all var(--t-fast);
 }
 .save-slot-delete:hover { background: rgba(120,0,0,.6); border-color: var(--blood-vivid); }
+
+/* ═══════════════════════════════════════════════════════════════
+   BLOODBOUND — game.css additions (v3)
+   Lag HP bar, boss name slam, parry HUD, cursor hide, sweep CD.
+═══════════════════════════════════════════════════════════════ */
+
+/* Hide default cursor over game canvas — we draw our own crosshair */
+#game-canvas { cursor: none; }
+
+/* Lag HP bar — sits behind real bar */
+.bar-track { position: relative; }
+.hp-lag-bar {
+  position: absolute; top:0; left:0; height:100%;
+  background: #f1c40f;
+  border-radius: 2px;
+  transition: width .6s ease;
+  z-index: 0;
+}
+.bar-fill { position: relative; z-index: 1; }
+
+/* Boss name slam animation */
+@keyframes boss-name-slam {
+  0%   { opacity:0; transform:translateX(-50%) scale(2.4) translateY(-20px); letter-spacing:.4em; }
+  35%  { opacity:1; transform:translateX(-50%) scale(1.05) translateY(0); letter-spacing:.22em; }
+  60%  { transform:translateX(-50%) scale(0.97); }
+  100% { transform:translateX(-50%) scale(1); }
+}
+.boss-name {
+  animation: boss-name-slam .65s cubic-bezier(.16,1,.3,1) both;
+}
+
+/* Ability slot activated flash */
+@keyframes slot-activate {
+  0%   { transform:scale(1);    box-shadow:0 0 0   rgba(255,51,71,0); }
+  40%  { transform:scale(1.2);  box-shadow:0 0 28px rgba(255,51,71,.9); }
+  100% { transform:scale(1);    box-shadow:0 0 0   rgba(255,51,71,0); }
+}
+.ability-slot.activated { animation: slot-activate .22s ease; }
+
+/* Dodge roll indicator on ability bar */
+.roll-indicator {
+  display:flex; align-items:center; justify-content:center;
+  width: clamp(48px,6vw,60px); height: clamp(48px,6vw,60px);
+  background: var(--blood-raised);
+  border: 2px solid var(--blood-border);
+  border-radius: var(--radius-md);
+  font-size:.65rem; font-family:var(--font-heading);
+  color:var(--text-muted); letter-spacing:.04em;
+  flex-direction:column; gap:2px; flex-shrink:0;
+}
+.roll-indicator .roll-key { font-size:.55rem; color:var(--blood-muted); }
+
+/* Parry indicator */
+.parry-indicator {
+  display:flex; align-items:center; justify-content:center;
+  width: clamp(48px,6vw,60px); height: clamp(48px,6vw,60px);
+  background: var(--blood-raised);
+  border: 2px solid var(--blood-border);
+  border-radius: var(--radius-md);
+  font-size:.65rem; font-family:var(--font-heading);
+  color:var(--text-muted); letter-spacing:.04em;
+  flex-direction:column; gap:2px; flex-shrink:0;
+  transition: border-color .15s ease;
+}
+.parry-indicator.active { border-color:#ffcc02; color:#ffcc02; box-shadow:0 0 12px rgba(255,204,2,.4); }

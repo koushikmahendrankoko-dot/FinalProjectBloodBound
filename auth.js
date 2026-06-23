@@ -3,15 +3,40 @@
    Sign in / Create Account / Reset Password logic
 ═══════════════════════════════════════════════════════════════ */
 
-/* ── GOOGLE IDENTITY INITIALIZATION ── */
+/* ── GOOGLE IDENTITY INITIALIZATION ──
+   ⚠ PASTE YOUR REAL GOOGLE OAUTH CLIENT ID BELOW ⚠
+   Get this from Google Cloud Console > APIs & Services > Credentials,
+   under your OAuth 2.0 Client ID, once your site is on its published
+   domain (Google Sign-In requires the domain to be registered there).
+   This is the ONLY place the client ID needs to be set. */
+const GOOGLE_CLIENT_ID = "PASTE_YOUR_REAL_GOOGLE_OAUTH_CLIENT_ID_HERE";
+
 window.onload = function () {
+  if (!window.google || !window.google.accounts) {
+    console.warn("Google Identity SDK failed to load — Google Sign-In unavailable.");
+    return;
+  }
+
   google.accounts.id.initialize({
-    client_id: "881716006091-o7ork239fc5o224b2oduajfnggsherd9.apps.googleusercontent.com",
+    client_id: GOOGLE_CLIENT_ID,
     callback: handleGoogleSignIn
   });
+
+  // Render into both mount points: sign-in tab and register tab
   const signinBtn = document.getElementById("google-signin-btn");
   if (signinBtn) {
-    google.accounts.id.renderButton(signinBtn, { theme: "filled_black", size: "large", width: "340" });
+    google.accounts.id.renderButton(signinBtn, {
+      theme: "filled_black", size: "large", width: 340,
+      text: "signin_with", shape: "rectangular", logo_alignment: "left"
+    });
+  }
+
+  const signupBtn = document.getElementById("google-signup-btn");
+  if (signupBtn) {
+    google.accounts.id.renderButton(signupBtn, {
+      theme: "filled_black", size: "large", width: 340,
+      text: "signup_with", shape: "rectangular", logo_alignment: "left"
+    });
   }
 };
 
