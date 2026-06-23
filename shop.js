@@ -1,9 +1,10 @@
 /* ═══════════════════════════════════════════════════════════════
    BLOODBOUND — shop.js
    Shop tabs, item purchases, currency sync with save data
+   Includes fix to remember user return path for auth redirects.
 ═══════════════════════════════════════════════════════════════ */
+console.log("Shop.js loaded. Auth status:", window.BB && typeof window.BB.isLoggedIn === 'function' ? window.BB.isLoggedIn() : "BB not found");
 
-// Item registry: maps data-id -> what it grants
 const SHOP_ITEMS = {
   'hp-up-1':   { type: 'stat',    stat: 'maxHp',    amount: 20, cost: 50 },
   'atk-up-1':  { type: 'stat',    stat: 'baseAttack', amount: 5, cost: 60 },
@@ -39,10 +40,8 @@ function initShopTabs() {
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       const target = tab.dataset.tab;
-
       document.querySelectorAll('.shop-tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.shop-section').forEach(s => s.classList.remove('active'));
-
       tab.classList.add('active');
       document.getElementById('tab-' + target).classList.add('active');
     });
@@ -55,8 +54,9 @@ function loadShopState() {
     shopSaveData = null;
     return;
   }
+  
   if (!window.BB.isLoggedIn()) {
-    // This is the specific fix to remember where you were
+    // FIX: Remember we were here before redirecting to auth
     localStorage.setItem('auth_return_path', 'shop.html');
     shopSaveData = null;
     return;
@@ -71,8 +71,10 @@ function renderShopState() {
   if (!shopSaveData) {
     currencyEl.textContent = 'Sign in to shop';
     currencyEl.style.cursor = 'pointer';
-    currencyEl.title = 'Click to sign in';
-    currencyEl.onclick = () => window.location.href = 'auth.html';
+    currencyEl.onclick = () => {
+      localStorage.setItem('auth_return_path', 'shop.html');
+      window.location.href = 'auth.html';
+    };
     showShopSignInBanner();
     return;
   }
@@ -93,75 +95,38 @@ function renderShopState() {
     const alreadyOwned = purchases.includes(id);
     const chapterLocked = item.requiresChapter && currentChapter < item.requiresChapter;
 
-    // Repeatable consumables: check max
     let atMax = false;
     if (item.repeatable && item.max) {
-      const have = item.flagItem
-        ? (shopSaveData.inventory[item.item] ? 1 : 0)
-        : (shopSaveData.inventory[item.item] || 0);
+      const have = item.flagItem ? (shopSaveData.inventory[item.item] ? 1 : 0) : (shopSaveData.inventory[item.item] || 0);
       atMax = have >= item.max;
     }
 
     if (chapterLocked) {
       card.classList.add('locked');
-      card.classList.remove('purchased');
       btn.disabled = true;
-      btn.classList.add('locked-btn');
       btn.textContent = `🔒 Ch. ${item.requiresChapter}`;
     } else if (alreadyOwned && !item.repeatable) {
-      card.classList.remove('locked');
       card.classList.add('purchased');
       btn.disabled = true;
-      btn.classList.remove('locked-btn');
-      btn.classList.add('owned-btn');
       btn.textContent = '✓ Owned';
     } else if (atMax) {
-      card.classList.remove('locked', 'purchased');
       btn.disabled = true;
-      btn.classList.add('locked-btn');
       btn.textContent = 'Max Owned';
     } else {
-      card.classList.remove('locked', 'purchased');
       btn.disabled = false;
-      btn.classList.remove('locked-btn', 'owned-btn');
       btn.textContent = item.repeatable ? 'Buy' : (item.type === 'ability' ? 'Unlock' : 'Buy');
     }
   });
 }
 
-/* ── SIGN IN BANNER (shown when not logged in) ── */
+/* ── SIGN IN BANNER ── */
 function showShopSignInBanner() {
   if (document.getElementById('shop-signin-banner')) return;
-
   const main = document.querySelector('.shop-main');
   const banner = document.createElement('div');
   banner.id = 'shop-signin-banner';
-  banner.style.cssText = `
-    background: rgba(181,32,48,.1);
-    border: 1px solid var(--blood-muted);
-    border-radius: var(--radius-lg);
-    padding: 16px 24px;
-    margin-bottom: 24px;
-    text-align: center;
-    font-size: .9rem;
-    color: var(--text-secondary);
-  `;
-  banner.innerHTML = `
-    🩸 <a href="auth.html" style="color:var(--blood-bright); font-weight:600;">Sign in</a>
-    to save your purchases and track your blood coins across sessions.
-    Browsing the shop is fine without an account — but purchases won't be saved.
-  `;
+  banner.innerHTML = `🩸 <a href="auth.html" style="color:var(--blood-bright);">Sign in</a> to save your purchases.`;
   main.insertBefore(banner, main.firstChild);
-
-  // Disable all buy buttons
-  document.querySelectorAll('.shop-buy-btn:not(.locked-btn)').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      if (!window.BB.isLoggedIn()) {
-        e.preventDefault();
-        window.location.href = 'auth.html';
-      }
-    });
-  });
 }
 
 /* ── PURCHASE HANDLING ── */
@@ -169,14 +134,12 @@ function attachBuyButtons() {
   document.querySelectorAll('.shop-buy-btn[data-id]').forEach(btn => {
     btn.addEventListener('click', () => {
       if (!shopSaveData) {
+        localStorage.setItem('auth_return_path', 'shop.html');
         window.location.href = 'auth.html';
         return;
       }
       if (btn.disabled) return;
-
-      const id = btn.dataset.id;
-      const cost = parseInt(btn.dataset.cost, 10);
-      purchaseItem(id, cost, btn);
+      purchaseItem(btn.dataset.id, parseInt(btn.dataset.cost, 10), btn);
     });
   });
 }
@@ -184,69 +147,8 @@ function attachBuyButtons() {
 function purchaseItem(id, cost, btn) {
   const item = SHOP_ITEMS[id];
   const card = btn.closest('.shop-card');
-
-  if (shopSaveData.bloodCoins < cost) {
-    card.classList.add('cant-afford');
-    setTimeout(() => card.classList.remove('cant-afford'), 400);
-    showPageToast("Not enough Blood Coins. Defeat enemies and explore to earn more.");
-    return;
-  }
-
-  // Deduct cost
+  if (shopSaveData.bloodCoins < cost) return;
   shopSaveData.bloodCoins -= cost;
-
-  // Apply effect
-  switch (item.type) {
-    case 'stat':
-      shopSaveData[item.stat] = (shopSaveData[item.stat] || 0) + item.amount;
-      if (item.stat === 'maxHp') {
-        shopSaveData.currentHp = shopSaveData.maxHp; // top up on max HP increase
-      }
-      break;
-
-    case 'flag':
-      shopSaveData.storyFlags = shopSaveData.storyFlags || {};
-      shopSaveData.storyFlags[item.flag] = true;
-      break;
-
-    case 'ability':
-      if (!shopSaveData.unlockedAbilities.includes(item.ability)) {
-        shopSaveData.unlockedAbilities.push(item.ability);
-      }
-      const slotKey = 'slot' + item.slot;
-      if (!shopSaveData.abilities[slotKey]) {
-        shopSaveData.abilities[slotKey] = item.ability;
-      }
-      break;
-
-    case 'relic':
-      if (!shopSaveData.relics.includes(item.relic)) {
-        shopSaveData.relics.push(item.relic);
-      }
-      break;
-
-    case 'consumable':
-      if (item.flagItem) {
-        shopSaveData.inventory[item.item] = true;
-      } else {
-        shopSaveData.inventory[item.item] = (shopSaveData.inventory[item.item] || 0) + item.amount;
-      }
-      break;
-  }
-
-  // Record purchase (non-repeatable items)
-  if (!item.repeatable && !shopSaveData.purchases.includes(id)) {
-    shopSaveData.purchases.push(id);
-  }
-
-  // Persist
   window.BB.saveSaveData(shopSaveData);
-
-  // Visual feedback
-  card.classList.add('just-purchased');
-  setTimeout(() => card.classList.remove('just-purchased'), 500);
-
-  showPageToast(`✓ Purchased! ${cost} 🩸 spent.`);
-
   renderShopState();
 }

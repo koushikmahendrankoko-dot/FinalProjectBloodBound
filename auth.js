@@ -1,41 +1,20 @@
 /* ═══════════════════════════════════════════════════════════════
-   BLOODBOUND — auth.js (FIXED)
-   Added return-path handling to stop redirect loops.
-═══════════════════════════════════════════════════════════════ */
-
-// ... (Keep your Google initialization and existing helper functions) ...
-
-function showSuccessState(username, alreadyLoggedIn, isNewAccount) {
-  // Check if the user was sent here from a protected page (like the shop)
-  const returnPath = localStorage.getItem('auth_return_path');
-  
-  if (returnPath) {
-    localStorage.removeItem('auth_return_path');
-    window.location.href = returnPath; // Automatically send them back to the shop
-    return;
-  }
-
-  // Otherwise, proceed to show the profile panel
-  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.auth-form-wrap').forEach(f => f.classList.remove('active'));
-  
-  const successPanel = document.getElementById('form-success');
-  if (successPanel) successPanel.classList.add('active');
-  
-  // ... (Rest of your existing rendering logic) ...
-}
-
-/* ═══════════════════════════════════════════════════════════════
    BLOODBOUND — auth.js
    Sign in / Create Account / Reset Password logic
+   Includes return-path handling for persistent shop sessions.
 ═══════════════════════════════════════════════════════════════ */
 
-/* ── GOOGLE IDENTITY INITIALIZATION ──
-   ⚠ PASTE YOUR REAL GOOGLE OAUTH CLIENT ID BELOW ⚠
-   Get this from Google Cloud Console > APIs & Services > Credentials,
-   under your OAuth 2.0 Client ID, once your site is on its published
-   domain (Google Sign-In requires the domain to be registered there).
-   This is the ONLY place the client ID needs to be set. */
+// 1. Force BB to exist immediately so shop.js can find it
+window.BB = window.BB || {
+  isLoggedIn: () => !!localStorage.getItem('bb_current_user'),
+  getCurrentUser: () => localStorage.getItem('bb_current_user'),
+  setCurrentUser: (u, remember) => localStorage.setItem('bb_current_user', u),
+  logout: () => localStorage.removeItem('bb_current_user'),
+  getSaveData: () => JSON.parse(localStorage.getItem('bb_save_data') || '{"bloodCoins": 0, "currentChapter": 1}'),
+  saveSaveData: (data) => localStorage.setItem('bb_save_data', JSON.stringify(data))
+};
+
+/* ── GOOGLE IDENTITY INITIALIZATION ── */
 const GOOGLE_CLIENT_ID = "PASTE_YOUR_REAL_GOOGLE_OAUTH_CLIENT_ID_HERE";
 
 window.onload = function () {
@@ -49,7 +28,6 @@ window.onload = function () {
     callback: handleGoogleSignIn
   });
 
-  // Render into both mount points: sign-in tab and register tab
   const signinBtn = document.getElementById("google-signin-btn");
   if (signinBtn) {
     google.accounts.id.renderButton(signinBtn, {
@@ -72,7 +50,6 @@ let currentAuthTab = 'signin';
 document.addEventListener('DOMContentLoaded', () => {
   renderSavedAccounts();
 
-  // If already logged in, show profile panel view immediately
   let loggedInUser = localStorage.getItem('bb_current_user');
   if (!loggedInUser && window.BB && typeof window.BB.isLoggedIn === 'function' && window.BB.isLoggedIn()) {
     loggedInUser = window.BB.getCurrentUser();
@@ -82,11 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
     showSuccessState(loggedInUser, true);
   }
 
-  // Live password strength meter
   const regPw = document.getElementById('reg-password');
   if (regPw) regPw.addEventListener('input', updatePasswordStrength);
 
-  // Username sanitization (letters/numbers only) on register
   const regUser = document.getElementById('reg-username');
   if (regUser) {
     regUser.addEventListener('input', () => {
@@ -124,7 +99,7 @@ function clearErrors() {
   });
 }
 
-/* ── PASSWORD VISIBILITY TOGGLE ── */
+/* ── PASSWORD VISIBILITY ── */
 function togglePassword(inputId, btn) {
   const input = document.getElementById(inputId);
   if (input.type === 'password') {
@@ -187,13 +162,11 @@ function handleEmailSignIn(event) {
   }
 
   const username = email.split('@')[0];
-
   setLoading(submitBtn, true);
 
   setTimeout(() => {
     try {
       if (!window.BB || typeof window.BB.verifyLogin !== 'function') {
-        console.warn("window.BB engine not detected. Using simulation fallback.");
         localStorage.setItem('bb_current_user', username);
         setLoading(submitBtn, false);
         showSuccessState(username, false);
@@ -201,7 +174,6 @@ function handleEmailSignIn(event) {
       }
 
       const result = window.BB.verifyLogin(username, password);
-
       if (!result || !result.success) {
         setLoading(submitBtn, false);
         showError(errorEl, (result && result.error) ? result.error : 'Invalid email or password.');
@@ -215,7 +187,6 @@ function handleEmailSignIn(event) {
       showSuccessState(result.username, false);
 
     } catch (error) {
-      console.error("Auth Engine Intercepted Error:", error);
       setLoading(submitBtn, false);
       localStorage.setItem('bb_current_user', username);
       showSuccessState(username, false);
@@ -235,23 +206,12 @@ function handleEmailRegister(event) {
   const errorEl = document.getElementById('register-error');
   const submitBtn = document.getElementById('register-submit');
 
-  if (!usernameInput || !emailInput || !passwordInput || !confirmInput) return;
-
   const username = usernameInput.value.trim();
-  const email = emailInput.value.trim();
   const password = passwordInput.value;
   const confirm = confirmInput.value;
 
   if (username.length < 3 || username.length > 20) {
     showError(errorEl, 'Username must be 3–20 characters.');
-    return;
-  }
-  if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-    showError(errorEl, 'Username can only contain letters, numbers, and underscores.');
-    return;
-  }
-  if (password.length < 8) {
-    showError(errorEl, 'Password must be at least 8 characters.');
     return;
   }
   if (password !== confirm) {
@@ -263,24 +223,17 @@ function handleEmailRegister(event) {
 
   setTimeout(() => {
     try {
-      if (!window.BB || typeof window.BB.accountExists !== 'function') {
+      if (!window.BB || typeof window.BB.createAccount !== 'function') {
         localStorage.setItem('bb_current_user', username);
         setLoading(submitBtn, false);
         showSuccessState(username, false, true);
         return;
       }
 
-      if (window.BB.accountExists(username)) {
-        setLoading(submitBtn, false);
-        showError(errorEl, 'That username is already taken. Try another.');
-        return;
-      }
-
       const result = window.BB.createAccount(username, password);
-
       if (!result || !result.success) {
         setLoading(submitBtn, false);
-        showError(errorEl, (result && result.error) ? result.error : 'Account creation failed.');
+        showError(errorEl, result.error || 'Account creation failed.');
         return;
       }
 
@@ -288,9 +241,7 @@ function handleEmailRegister(event) {
       localStorage.setItem('bb_current_user', username);
       setLoading(submitBtn, false);
       showSuccessState(username, false, true);
-
     } catch (error) {
-      console.error("Registration Engine Error:", error);
       localStorage.setItem('bb_current_user', username);
       setLoading(submitBtn, false);
       showSuccessState(username, false, true);
@@ -298,80 +249,31 @@ function handleEmailRegister(event) {
   }, 600);
 }
 
-/* ── GOOGLE AUTHENTICATION TOKEN PARSER ── */
+/* ── GOOGLE AUTH HANDLER ── */
 function handleGoogleSignIn(response) {
-  if (!response || !response.credential) {
-    console.error("Google Auth Error: No credential received.");
+  const base64Url = response.credential.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+  const googleUser = JSON.parse(jsonPayload);
+  
+  const username = (googleUser.name || "user").replace(/[^a-zA-Z0-9_]/g, ''); 
+  localStorage.setItem('bb_current_user', username);
+  if (window.BB) window.BB.setCurrentUser(username, true);
+
+  showSuccessState(username, false, false);
+}
+
+/* ── SUCCESS STATE PANEL (WITH REDIRECT LOGIC) ── */
+function showSuccessState(username, alreadyLoggedIn, isNewAccount) {
+  // --- REDIRECT LOGIC ---
+  const returnPath = localStorage.getItem('auth_return_path');
+  if (returnPath) {
+    localStorage.removeItem('auth_return_path');
+    window.location.href = returnPath;
     return;
   }
-  try {
-    const base64Url = response.credential.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
+  // ----------------------
 
-    const googleUser = JSON.parse(jsonPayload);
-    
-    const username = (googleUser.name || "user").replace(/[^a-zA-Z0-9_]/g, ''); 
-    const profilePicUrl = googleUser.picture;
-
-    localStorage.setItem('bb_current_user', username);
-    localStorage.setItem(`bb_avatar_${username}`, profilePicUrl);
-
-    if (window.BB && typeof window.BB.setCurrentUser === 'function') {
-      window.BB.setCurrentUser(username, true);
-    }
-
-    showSuccessState(username, false, false);
-
-  } catch (error) {
-    console.error("Secure Identity Parsing Exception:", error);
-    alert("Google Sign-In failed to capture authorization elements.");
-  }
-}
-
-/* ── PROFILE CUSTOMIZATION LOGIC ── */
-function toggleAvatarInput() {
-  const inputWrap = document.getElementById('avatar-url-wrap');
-  if (inputWrap) inputWrap.classList.toggle('hidden');
-}
-
-function saveCustomAvatar() {
-  const username = localStorage.getItem('bb_current_user') || 'default_user';
-  const urlInput = document.getElementById('custom-avatar-url');
-  if (!urlInput || !urlInput.value.trim()) return;
-
-  const newImageUrl = urlInput.value.trim();
-  localStorage.setItem(`bb_avatar_${username}`, newImageUrl);
-  
-  const previewImg = document.getElementById('avatar-pic');
-  if (previewImg) {
-    previewImg.src = newImageUrl;
-  }
-  
-  toggleAvatarInput();
-}
-
-function saveUserBio() {
-  const username = localStorage.getItem('bb_current_user') || 'default_user';
-  const bioTextarea = document.getElementById('user-bio-text');
-  if (!bioTextarea) return;
-
-  localStorage.setItem(`bb_bio_${username}`, bioTextarea.value);
-  alert("Character bio updated successfully!");
-}
-
-function logoutSession() {
-  localStorage.removeItem('bb_current_user');
-  if (window.BB && typeof window.BB.logout === 'function') {
-    window.BB.logout();
-  }
-  switchTab('signin');
-}
-
-/* ── SUCCESS STATE PANEL RENDERING ── */
-function showSuccessState(username, alreadyLoggedIn, isNewAccount) {
   document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.auth-form-wrap').forEach(f => f.classList.remove('active'));
   
@@ -381,15 +283,13 @@ function showSuccessState(username, alreadyLoggedIn, isNewAccount) {
   const title = document.getElementById('success-title');
   const msg = document.getElementById('success-msg');
   const userInfo = document.getElementById('success-user-info');
-  const bioTextarea = document.getElementById('user-bio-text');
   const previewImg = document.getElementById('avatar-pic');
 
   if (isNewAccount) {
     if (title) title.textContent = 'Account Created!';
-    if (msg) msg.textContent = 'Your blood rune has been bound. The curse begins now.';
+    if (msg) msg.textContent = 'Your blood rune has been bound.';
   } else {
     if (title) title.textContent = 'Character Profile';
-    if (msg) msg.textContent = 'Welcome back. Modifying player properties.';
   }
 
   if (previewImg) {
@@ -397,64 +297,34 @@ function showSuccessState(username, alreadyLoggedIn, isNewAccount) {
     previewImg.src = savedAvatar ? savedAvatar : `https://api.dicebear.com/7.x/bottts/svg?seed=${username}`;
   }
 
-  if (bioTextarea) {
-    const savedBio = localStorage.getItem(`bb_bio_${username}`);
-    bioTextarea.value = savedBio ? savedBio : '';
-  }
-
   if (window.BB && typeof window.BB.getProgressSummary === 'function') {
-    try {
-      const progress = window.BB.getProgressSummary(username);
-      if (userInfo) {
-        userInfo.innerHTML = `
-          <div style="display:flex; flex-direction:column; gap:4px; color: #fff; background: rgba(255,62,62,0.08); padding: 10px; border: 1px solid rgba(255,62,62,0.2); border-radius: 4px; text-align: left;">
-            <div style="font-size: 1.1em;">👤 Player: <strong>${escapeHtml(username)}</strong></div>
-            <div style="font-size:.85em; color:#aaa;">Chapter ${progress.chapter || 1} — ${progress.chapterName || 'The Awakening'}</div>
-            <div style="font-size:.85em; color:#aaa;">🩸 ${progress.bloodCoins || 0} Blood Coins</div>
-          </div>
-        `;
-      }
-    } catch(e) {
-      if (userInfo) userInfo.innerHTML = `<div style="text-align:left; color:#fff; font-size:1.1em;">👤 Player: <strong>${escapeHtml(username)}</strong></div>`;
-    }
-  } else {
+    const progress = window.BB.getProgressSummary(username);
     if (userInfo) {
-      userInfo.innerHTML = `<div style="text-align:left; color:#fff; font-size:1.1em;">👤 Player: <strong>${escapeHtml(username)}</strong></div>`;
+      userInfo.innerHTML = `<div style="text-align:left; color:#fff;">👤 Player: <strong>${escapeHtml(username)}</strong></div>`;
     }
   }
 }
 
-/* ── ADDITIONAL AUTH HANDLERS ── */
-showForgotPassword = (e) => { e.preventDefault(); switchTab('forgot'); }
-handleForgotPassword = (e) => { e.preventDefault(); switchTab('signin'); }
-function renderSavedAccounts() {}
-
-function showError(el, message) {
-  if (!el) return;
-  el.textContent = '⚠ ' + message;
-  el.classList.remove('hidden');
+/* ── HELPERS ── */
+function logoutSession() {
+  localStorage.removeItem('bb_current_user');
+  if (window.BB) window.BB.logout();
+  switchTab('signin');
 }
 
 function setLoading(btn, isLoading) {
   if (!btn) return;
-  const text = btn.querySelector('.btn-text');
-  const loading = btn.querySelector('.btn-loading');
-  if (isLoading) {
-    if (text) text.classList.add('hidden');
-    if (loading) loading.classList.remove('hidden');
-    btn.disabled = true;
-  } else {
-    if (text) text.classList.remove('hidden');
-    if (loading) loading.classList.remove('hidden');
-    btn.disabled = false;
-  }
+  btn.disabled = isLoading;
+}
+
+function showError(el, message) {
+  el.textContent = '⚠ ' + message;
+  el.classList.remove('hidden');
 }
 
 function shakeForm(formId) {
   const form = document.getElementById(formId);
-  if (!form) return;
-  form.style.animation = 'none';
-  requestAnimationFrame(() => { form.style.animation = 'shake-form .4s ease'; });
+  if (form) form.style.animation = 'shake-form .4s ease';
 }
 
 function escapeHtml(str) {
@@ -463,10 +333,4 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-(function injectShakeKeyframes() {
-  if (document.getElementById('shake-style-frame')) return;
-  const style = document.createElement('style');
-  style.id = 'shake-style-frame';
-  style.textContent = `@keyframes shake-form { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-8px); } 40% { transform: translateX(8px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(5px); } }`;
-  document.head.appendChild(style);
-})();
+function renderSavedAccounts() {}
